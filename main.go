@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"enkya.org/playground/playground"
@@ -17,6 +18,7 @@ func main() {
 		game := playground.NewGame()
 		// start the game
 		game.Start()
+		fmt.Println("Game over!")
 		return nil
 	}
 
