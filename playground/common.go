@@ -12,9 +12,6 @@ type Ladder struct {
 	end   int
 }
 
-/*
-addLaddersToBoard adds the ladders to the board and returns the list of ladders
-*/
 func addLaddersToBoard(board *Board) []*Ladder {
 	ladders := []*Ladder{
 		{start: 6, end: 25},
@@ -30,9 +27,6 @@ func addLaddersToBoard(board *Board) []*Ladder {
 	return ladders
 }
 
-/*
-addSnakesToBoard adds the snakes to the board and returns the list of snakes
-*/
 func addSnakesToBoard(board *Board) []*Snake {
 	snakes := []*Snake{
 		{start: 99, end: 54},
