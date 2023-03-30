@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -29,14 +29,14 @@ func (j *Journal) String() string {
 
 func (j *Journal) Save(filename string) {
 	// ...
-	_ = ioutil.WriteFile(filename, []byte(j.String()), 0644)
+	_ = os.WriteFile(filename, []byte(j.String()), 0644)
 }
 
 var LineSeparator = "\n"
 
 func SaveToFile(j *Journal, filename string) {
 	// ...
-	_ = ioutil.WriteFile(filename, []byte(strings.Join(j.entries, LineSeparator)), 0644)
+	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, LineSeparator)), 0644)
 }
 
 type Persistence struct {
@@ -44,7 +44,7 @@ type Persistence struct {
 }
 
 func (p *Persistence) SaveToFile(j *Journal, filename string) {
-	_ = ioutil.WriteFile(filename, []byte(strings.Join(j.entries, p.lineSeparator)), 0644)
+	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, p.lineSeparator)), 0644)
 }
 
 func main() {

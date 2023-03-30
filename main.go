@@ -19,5 +19,8 @@ func main() {
 	}
 
 	// run the application
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		panic(err)
+	}
 }
