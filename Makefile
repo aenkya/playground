@@ -4,6 +4,7 @@ GOBUILD=$(GOCMD) build
 GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOLINT=golangci-lint run
+BIN_DIR=bin
 
 # Binary name
 BINARY_NAME=playgrnd
@@ -25,13 +26,16 @@ lint:
 	$(GOLINT) ./...
 
 build:
-	$(GOBUILD) -o $(BINARY_NAME) -v
+	$(GOBUILD) -o $(BIN_DIR)/$(BINARY_NAME) -v
+
+run: clean build
+	./$(BIN_DIR)/$(BINARY_NAME)
 
 test:
 	$(GOTEST) -v ./...
 
 clean:
-	rm -f $(BINARY_NAME)
+	rm -f $(BIN_DIR)/$(BINARY_NAME)
 
 docker-build:
 	$(DOCKER_BUILD_CMD) -t $(DOCKER_IMAGE_NAME) .
