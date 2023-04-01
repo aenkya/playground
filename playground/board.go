@@ -3,9 +3,9 @@ package playground
 import "fmt"
 
 type Board struct {
-	size            int
 	snakePositions  map[int]Position
 	ladderPositions map[int]Position
+	size            int
 }
 
 /*
@@ -21,6 +21,7 @@ func (b *Board) MovePlayer(p *Player, pos Position) {
 	if newPos, ok := b.snakePositions[newPos]; ok {
 		p.Move(newPos)
 		fmt.Printf("\n%s with token %s landed on a snake and moved to %d", p.name, p.token, p.position)
+
 		return
 	}
 
@@ -28,6 +29,7 @@ func (b *Board) MovePlayer(p *Player, pos Position) {
 	if newPos, ok := b.ladderPositions[newPos]; ok {
 		p.Move(newPos)
 		fmt.Printf("\n%s with token %s landed on a ladder and moved to %d", p.name, p.token, p.position)
+
 		return
 	}
 

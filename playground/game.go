@@ -51,6 +51,7 @@ func (s *SnakesAndLaddersGame) getGameDetails() {
 	var numOfPlayers int
 
 	fmt.Print("Enter number of players: ")
+
 	_, err := fmt.Scanln(&numOfPlayers)
 	if err != nil {
 		fmt.Println("Invalid number of players.")
@@ -58,10 +59,12 @@ func (s *SnakesAndLaddersGame) getGameDetails() {
 
 	for i := 0; i < numOfPlayers; i++ {
 		name := ""
+
 		fmt.Printf("\nEnter name of player %d: ", i+1)
 		fmt.Scan(&name)
 
 		token := ""
+
 		fmt.Printf("\nEnter token of player %d: ", i+1)
 		fmt.Scan(&token)
 		s.players = append(s.players, &Player{name: name, token: token})
@@ -72,7 +75,8 @@ func (s *SnakesAndLaddersGame) getGameDetails() {
 NewGame initializes the game with the board, snakes, ladders and players
 */
 func NewGame() Game {
-	board := &Board{size: 100}
+	boardSize := 100
+	board := &Board{size: boardSize}
 	snakes := addSnakesToBoard(board)
 	ladders := addLaddersToBoard(board)
 	game := &SnakesAndLaddersGame{
@@ -80,5 +84,6 @@ func NewGame() Game {
 		snakes:  snakes,
 		ladders: ladders,
 	}
+
 	return game
 }

@@ -15,9 +15,13 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		game := playground.NewGame()
 		game.Start()
+
 		return nil
 	}
 
 	// run the application
-	app.Run(os.Args)
+	err := app.Run(os.Args)
+	if err != nil {
+		panic(err)
+	}
 }

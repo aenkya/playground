@@ -12,10 +12,8 @@ type Ladder struct {
 	end   int
 }
 
-/*
-addLaddersToBoard adds the ladders to the board and returns the list of ladders
-*/
 func addLaddersToBoard(board *Board) []*Ladder {
+	//nolint:gomnd // this is a playground. We don't expect to change the number of ladders
 	ladders := []*Ladder{
 		{start: 6, end: 25},
 		{start: 11, end: 40},
@@ -27,13 +25,12 @@ func addLaddersToBoard(board *Board) []*Ladder {
 	for _, ladder := range ladders {
 		board.ladderPositions[ladder.start] = Position(ladder.end)
 	}
+
 	return ladders
 }
 
-/*
-addSnakesToBoard adds the snakes to the board and returns the list of snakes
-*/
 func addSnakesToBoard(board *Board) []*Snake {
+	//nolint:gomnd // this is a playground. We don't expect to change the number of snakes
 	snakes := []*Snake{
 		{start: 99, end: 54},
 		{start: 70, end: 55},
@@ -45,5 +42,6 @@ func addSnakesToBoard(board *Board) []*Snake {
 	for _, snake := range snakes {
 		board.snakePositions[snake.start] = Position(snake.end)
 	}
+
 	return snakes
 }
