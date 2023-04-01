@@ -15,6 +15,7 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		game := playground.NewGame()
 		game.Start()
+
 		return nil
 	}
 

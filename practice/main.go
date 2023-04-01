@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"enkya.org/playground/utils"
 )
 
 var entryCount = 0
@@ -12,14 +14,13 @@ type Journal struct {
 	entries []string
 }
 
-func (j *Journal) AddEntry(text string) int {
+func (j *Journal) AddEntry(text string) {
 	entryCount++
 	entry := fmt.Sprintf("%d: %s", entryCount, text)
 	j.entries = append(j.entries, entry)
-	return entryCount
 }
 
-func (j *Journal) RemoveEntry(index int) {
+func (j *Journal) RemoveEntry() {
 	// ...
 }
 
@@ -29,14 +30,14 @@ func (j *Journal) String() string {
 
 func (j *Journal) Save(filename string) {
 	// ...
-	_ = os.WriteFile(filename, []byte(j.String()), 0644)
+	_ = os.WriteFile(filename, []byte(j.String()), utils.WritePermission)
 }
 
 var LineSeparator = "\n"
 
 func SaveToFile(j *Journal, filename string) {
 	// ...
-	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, LineSeparator)), 0644)
+	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, LineSeparator)), utils.WritePermission)
 }
 
 type Persistence struct {
@@ -44,7 +45,7 @@ type Persistence struct {
 }
 
 func (p *Persistence) SaveToFile(j *Journal, filename string) {
-	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, p.lineSeparator)), 0644)
+	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, p.lineSeparator)), utils.WritePermission)
 }
 
 func main() {
@@ -57,5 +58,4 @@ func main() {
 
 	p := Persistence{"\r\n"}
 	p.SaveToFile(&j, "journal.txt")
-
 }
