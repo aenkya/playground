@@ -43,20 +43,24 @@ func (r *rot13Reader) Read(p []byte) (int, error) {
 	for k, v := range p[:n] {
 		p[k] = rot13(v)
 	}
+
 	return n, err
 }
 
+//nolint:gocritic // the if statement makes more sense here
 func rot13(c byte) byte {
 	const rot = 13
 	if c >= 'a' && c <= 'z' {
 		if c+rot <= 'z' {
 			return c + rot
 		}
+
 		return c - rot
 	} else if c >= 'A' && c <= 'Z' {
 		if c+rot <= 'Z' {
 			return c + rot
 		}
+
 		return c - rot
 	} else {
 		return c
@@ -65,6 +69,7 @@ func rot13(c byte) byte {
 
 func GoPractice() {
 	i := 8
+
 	var x myType = 8
 	if i%2 == 0 {
 		fmt.Printf("Even: %T\n", x)
@@ -78,24 +83,31 @@ func GoPractice() {
 	}()
 
 	fmt.Println(runtime.NumCPU())
-	var y int
+
 	arr := [...]int{3, 5, 2}
-	y = arr[0]
+	y := arr[0]
 	fmt.Println(x, len(arr), y)
 
 	const sample = "\xbd\xb2\x3d\xbc\x20\xe2\x8c\x98"
+
 	fmt.Println(sample)
+
 	for i := 0; i < len(sample); i++ {
 		fmt.Printf("%x", sample[i]) // hexa decimal representation
 	}
+
 	fmt.Println()
+
 	for _, rune := range sample {
 		fmt.Printf("% d\n", rune)
 	}
 
 	s := strings.NewReader("Lbh penpxrq gur pbqr!")
 	r := rot13Reader{s}
-	io.Copy(os.Stdout, &r)
+
+	if _, err := io.Copy(os.Stdout, &r); err != nil {
+		fmt.Print(err)
+	}
 
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
@@ -103,16 +115,17 @@ func GoPractice() {
 
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
-		log.Fatal("MONGODB_URI not found")
+		fmt.Print("MONGODB_URI not found")
 	}
 
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print(err)
 	}
+
 	defer func() {
 		if err = client.Disconnect(context.TODO()); err != nil {
-			log.Fatal(err)
+			fmt.Print(err)
 		}
 	}()
 
@@ -121,9 +134,8 @@ func GoPractice() {
 
 	var result Movie
 	if err = coll.FindOne(context.TODO(), bson.M{"title": title}).Decode(&result); err != nil {
-		log.Fatal(err)
+		fmt.Println("No movie found")
 	}
-	// add projection
 
 	// add aggregate query
 	pipeline := []bson.M{
@@ -131,88 +143,111 @@ func GoPractice() {
 		{"$project": bson.M{"title": 1, "year": 1, "genres": 1}},
 	}
 	opts := options.Aggregate().SetMaxTime(2 * time.Second)
+
 	cursor, err := coll.Aggregate(context.Background(), pipeline, opts)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print(err)
 	}
+
 	defer cursor.Close(context.Background())
+
 	for cursor.Next(context.Background()) {
 		var result bson.M
-		if err := cursor.Decode(&result); err != nil {
-			log.Fatal(err)
+		if err = cursor.Decode(&result); err != nil {
+			fmt.Print(err)
 		}
+
 		fmt.Printf("%v\n", result)
 	}
-	if err := cursor.Err(); err != nil {
-		log.Fatal(err)
+
+	if err = cursor.Err(); err != nil {
+		fmt.Print(err)
 	}
 
 	// add update query
 	filter := bson.M{"title": title}
 	update := bson.M{"$set": bson.M{"title": "The Dark Knight Rises"}}
+
 	updateResult, err := coll.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print(err)
 	}
+
 	fmt.Printf("Matched %v documents and updated %v documents.\n", updateResult.MatchedCount, updateResult.ModifiedCount)
 
 	// add insert query
 	newMovie := Movie{
-		Title: "The Dark Knight",
-		Year:  2008,
-		Genres: []string{
-			"Action",
-			"Crime",
-			"Drama",
-		},
-		Runtime:  152,
-		Released: time.Date(2008, time.July, 18, 0, 0, 0, 0, time.UTC),
+		ID:           "",
+		Title:        "The Dark Knight",
+		Genres:       []string{"Action", "Crime", "Drama"},
+		Runtime:      152,
+		Year:         2008,
+		Released:     time.Date(2008, time.July, 18, 0, 0, 0, 0, time.UTC),
+		DateModified: time.Time{},
 	}
+
 	insertResult, err := coll.InsertOne(context.Background(), newMovie)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print(err)
 	}
+
 	fmt.Println(insertResult.InsertedID)
 
 	jsonData, err := json.MarshalIndent(result, "", "	")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Print(err)
 	}
 
 	var mutex = &sync.Mutex{}
 	go func() {
 		mutex.Lock()
 		defer mutex.Unlock()
+
 		result.Title = "The Duck Knight Rises"
+
 		jsonData, err = json.MarshalIndent(result, "", "	")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Print(err)
 		}
+
 		fmt.Printf("%s\n", jsonData)
 	}()
+
 	go func() {
 		mutex.Lock()
 		defer mutex.Unlock()
+
 		result.Title = "The Dark Knight Rizesss"
+
 		jsonData, err = json.MarshalIndent(result, "", "	")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Print(err)
 		}
+
 		fmt.Printf("%s\n", jsonData)
 	}()
 
 	http.HandleFunc("/movies", GetMovies)
 	fmt.Println("Server started")
-	// pings := make(chan string)
-	// pongs := make(chan string)
-	// go pinger(pings)
-	// go ponger(pings, pongs)
-	// go printer(pongs)
-	http.ListenAndServe(":8080", nil)
+
+	pings := make(chan string)
+	pongs := make(chan string)
+
+	go pinger(pings)
+	go ponger(pings, pongs)
+	go printer(pongs)
+
+	server := &http.Server{
+		Addr:              ":8080",
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+	if err := server.ListenAndServe(); err != nil {
+		fmt.Print(err)
+	}
 }
 
 func pinger(pings chan<- string) {
-	for i := 0; ; i++ {
+	for i := 0; i < 5; i++ {
 		pings <- "ping"
 	}
 }
@@ -235,6 +270,7 @@ func printer(pongs <-chan string) {
 	}
 }
 
+//nolint:govet // ignore struct field order
 type Movie struct {
 	ID           string    `bson:"_id,omitempty"`
 	Title        string    `bson:"title"`
@@ -245,8 +281,11 @@ type Movie struct {
 	DateModified time.Time `bson:"dateModified,required"`
 }
 
-func GetMovies(w http.ResponseWriter, r *http.Request) {
+func GetMovies(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(`{"message": "get movies"}`))
+
+	if _, err := w.Write([]byte(`{"message": "get movies"}`)); err != nil {
+		fmt.Println(err)
+	}
 }

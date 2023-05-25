@@ -33,7 +33,6 @@ linters:
     - gocritic
     - gofmt
     - goimports
-    - gomnd
     - gocyclo
     - gosec
     - gosimple
@@ -57,5 +56,3 @@ linters:
 
 run:
   issues-exit-code: 1
-  build-tags:
-    - codeanalysis
