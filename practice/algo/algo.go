@@ -5,7 +5,6 @@ import "fmt"
 type Algo interface {
 	RunAlgo()
 	Describe()
-	CastInput() error
 }
 
 type PracticeType struct {
@@ -51,6 +50,9 @@ func Practice() PracticeType {
 
 	ts := NewTwoSum()
 	p.SetAlgo("twosum", ts)
+
+	ts3 := NewThreeSum()
+	p.SetAlgo("threesum", ts3)
 
 	return p
 }

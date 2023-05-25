@@ -2,6 +2,8 @@ package algo
 
 import (
 	"fmt"
+
+	"enkya.org/playground/utils"
 )
 
 type TwoSum struct {
@@ -29,6 +31,7 @@ func (ts *TwoSum) twoSumV1(nums []int, target int) []int {
 			}
 		}
 	}
+
 	return []int{}
 }
 
@@ -39,14 +42,16 @@ func (ts *TwoSum) twoSumV2(nums []int, target int) []int {
 		if j, ok := m[target-e]; ok {
 			return []int{j, i}
 		}
+
 		m[e] = i
 	}
+
 	return []int{}
 }
 
 func (ts *TwoSum) Test() error {
 	for _, v := range ts.versions {
-		if err := ts.TestFunction(v); err != nil {
+		if err := ts.testFunction(v); err != nil {
 			return err
 		}
 	}
@@ -54,33 +59,19 @@ func (ts *TwoSum) Test() error {
 	return nil
 }
 
-func (ts *TwoSum) TestFunction(f func(nums []int, target int) []int) error {
+func (ts *TwoSum) testFunction(f func(nums []int, target int) []int) error {
 	for _, e := range ts.testData {
 		nums, _ := e.input.([]any)[0].([]int)
 		target, _ := e.input.([]any)[1].(int)
 		expected, _ := e.output.([]int)
 		actual := f(nums, target)
 
-		if !compareIntSlice(expected, actual) {
+		if !utils.CompareIntSlice(expected, actual) {
 			return fmt.Errorf("expected %v, got %v", expected, actual)
 		}
 	}
 
 	return nil
-}
-
-func compareIntSlice(a, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i, e := range a {
-		if e != b[i] {
-			return false
-		}
-	}
-
-	return true
 }
 
 func (ts *TwoSum) Describe() {
@@ -91,16 +82,6 @@ func (ts *TwoSum) Describe() {
 		target, _ := e.input.([]any)[1].(int)
 		fmt.Printf("Example %d:\n\tInput: \tnums = %v, target = %d\n\tOutput:  %v\n", i, nums, target, e.output)
 	}
-}
-
-func (ts *TwoSum) CastInput() error {
-	for _, e := range ts.testData {
-		nums, _ := e.input.([]any)[0].([]int)
-		target, _ := e.input.([]any)[1].(int)
-		e.input = []any{nums, target}
-	}
-
-	return nil
 }
 
 func NewTwoSum() *TwoSum {
@@ -141,5 +122,6 @@ func NewTwoSum() *TwoSum {
 		versions: []func(nums []int, target int) []int{},
 	}
 	t.versions = append(t.versions, t.twoSumV1, t.twoSumV2)
+
 	return t
 }

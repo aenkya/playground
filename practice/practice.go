@@ -10,7 +10,7 @@ import (
 func Practice() {
 	ap := algo.Practice()
 
-	a, err := ap.GetAlgo("twosum")
+	a, err := ap.GetAlgo("threesum")
 	if err != nil {
 		panic(err)
 	}
