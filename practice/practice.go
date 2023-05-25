@@ -10,7 +10,7 @@ import (
 func Practice() {
 	ap := algo.Practice()
 
-	a, err := ap.GetAlgo("isValidPalindrome")
+	a, err := ap.GetAlgo("spiralMatrix")
 	if err != nil {
 		panic(err)
 	}

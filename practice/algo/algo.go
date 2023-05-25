@@ -58,5 +58,8 @@ func Practice() PracticeType {
 	isValidPalindrome := NewIsValidPalindrome()
 	p.SetAlgo("isValidPalindrome", isValidPalindrome)
 
+	spiralMatrix := NewSpiralMatrix()
+	p.SetAlgo("spiralMatrix", spiralMatrix)
+
 	return p
 }
