@@ -57,3 +57,5 @@ linters:
 
 run:
   issues-exit-code: 1
+  build-tags:
+    - codeanalysis

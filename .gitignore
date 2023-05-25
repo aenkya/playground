@@ -39,3 +39,4 @@ tmp/*
 */tmp/**
 */bin/**
 bin/*
+.env

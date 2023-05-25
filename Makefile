@@ -25,6 +25,9 @@ help:
 lint:
 	$(GOLINT) ./...
 
+lint-fix:
+	$(GOLINT) --fix ./...
+
 build:
 	$(GOBUILD) -o $(BIN_DIR)/$(BINARY_NAME) -v
 

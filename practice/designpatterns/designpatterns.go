@@ -1,4 +1,4 @@
-package main
+package designpatterns
 
 import (
 	"fmt"
@@ -48,7 +48,7 @@ func (p *Persistence) SaveToFile(j *Journal, filename string) {
 	_ = os.WriteFile(filename, []byte(strings.Join(j.entries, p.lineSeparator)), utils.WritePermission)
 }
 
-func main() {
+func DesignPatterns() {
 	j := Journal{}
 	j.AddEntry("I cried today.")
 	j.AddEntry("I ate a bug.")
