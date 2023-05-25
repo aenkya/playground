@@ -10,7 +10,7 @@ import (
 func Practice() {
 	ap := algo.Practice()
 
-	a, err := ap.GetAlgo("threesum")
+	a, err := ap.GetAlgo("isValidPalindrome")
 	if err != nil {
 		panic(err)
 	}

@@ -5,6 +5,7 @@ import "fmt"
 type Algo interface {
 	RunAlgo()
 	Describe()
+	Test() error
 }
 
 type PracticeType struct {
@@ -53,6 +54,9 @@ func Practice() PracticeType {
 
 	ts3 := NewThreeSum()
 	p.SetAlgo("threesum", ts3)
+
+	isValidPalindrome := NewIsValidPalindrome()
+	p.SetAlgo("isValidPalindrome", isValidPalindrome)
 
 	return p
 }
