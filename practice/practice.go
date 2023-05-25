@@ -9,6 +9,11 @@ import (
 
 func Practice() {
 	ap := algo.Practice()
-	ap.SetChallengeName("ReverseArray")
-	ap.RunAlgo()
+
+	a, err := ap.GetAlgo("twosum")
+	if err != nil {
+		panic(err)
+	}
+
+	a.RunAlgo()
 }
