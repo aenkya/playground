@@ -10,7 +10,7 @@ import (
 func Practice() {
 	ap := algo.Practice()
 
-	a, err := ap.GetAlgo("spiralMatrix")
+	a, err := ap.GetAlgo("binarySearch")
 	if err != nil {
 		panic(err)
 	}

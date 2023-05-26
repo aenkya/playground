@@ -61,5 +61,8 @@ func Practice() PracticeType {
 	spiralMatrix := NewSpiralMatrix()
 	p.SetAlgo("spiralMatrix", spiralMatrix)
 
+	bs := NewBinarySearch()
+	p.SetAlgo("binarySearch", bs)
+
 	return p
 }
