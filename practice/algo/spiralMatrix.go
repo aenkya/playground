@@ -6,13 +6,14 @@ import (
 	"runtime"
 	"strings"
 
+	"enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
 )
 
 type SpiralMatrix struct {
 	description string
-	examples    []IO
-	testData    []IO
+	examples    []io.IO
+	testData    []io.IO
 	versions    []func(matrix [][]int) []int
 }
 
@@ -21,7 +22,7 @@ func (sm *SpiralMatrix) Describe() {
 	fmt.Println("Examples:")
 
 	for _, e := range sm.examples {
-		fmt.Printf("Input: %v\nOutput: %v\n", e.input, e.output)
+		fmt.Printf("Input: %v\nOutput: %v\n", e.Input, e.Output)
 	}
 }
 
@@ -52,12 +53,12 @@ func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
 	fmt.Println("Function name:", functionName)
 
 	for _, e := range sm.testData {
-		matrix, _ := e.input.([][]int)
-		expected, _ := e.output.([]int)
+		matrix, _ := e.Input.([][]int)
+		expected, _ := e.Output.([]int)
 		r := f(matrix)
 
 		if !utils.CompareIntSlice(r, expected) {
-			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.input, expected, r)
+			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, r)
 		}
 	}
 
@@ -67,32 +68,32 @@ func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
 func NewSpiralMatrix() *SpiralMatrix {
 	m := &SpiralMatrix{
 		description: `Given an m x n matrix, return all elements of the matrix in spiral order.`,
-		examples: []IO{
+		examples: []io.IO{
 			{
-				[][]int{
+				Input: [][]int{
 					{1, 2, 3, 4, 5},
 					{6, 7, 8, 9, 10},
 					{11, 12, 13, 14, 15},
 					{16, 17, 18, 19, 20},
 					{21, 22, 23, 24, 25},
 				},
-				[]int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
+				Output: []int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
 			},
 			{
-				[][]int{{1, 2}, {3, 4}},
-				[]int{1, 2, 4, 3},
+				Input:  [][]int{{1, 2}, {3, 4}},
+				Output: []int{1, 2, 4, 3},
 			},
 		},
-		testData: []IO{
+		testData: []io.IO{
 			{
-				[][]int{
+				Input: [][]int{
 					{1, 2, 3, 4, 5},
 					{6, 7, 8, 9, 10},
 					{11, 12, 13, 14, 15},
 					{16, 17, 18, 19, 20},
 					{21, 22, 23, 24, 25},
 				},
-				[]int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
+				Output: []int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
 			},
 		},
 		versions: []func([][]int) []int{},

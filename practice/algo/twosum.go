@@ -3,13 +3,14 @@ package algo
 import (
 	"fmt"
 
+	"enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
 )
 
 type TwoSum struct {
 	description string
-	examples    []IO
-	testData    []IO
+	examples    []io.IO
+	testData    []io.IO
 	versions    []func(nums []int, target int) []int
 }
 
@@ -61,9 +62,9 @@ func (ts *TwoSum) Test() error {
 
 func (ts *TwoSum) testFunction(f func(nums []int, target int) []int) error {
 	for _, e := range ts.testData {
-		nums, _ := e.input.([]any)[0].([]int)
-		target, _ := e.input.([]any)[1].(int)
-		expected, _ := e.output.([]int)
+		nums, _ := e.Input.([]any)[0].([]int)
+		target, _ := e.Input.([]any)[1].(int)
+		expected, _ := e.Output.([]int)
 		actual := f(nums, target)
 
 		if !utils.CompareIntSlice(expected, actual) {
@@ -78,9 +79,9 @@ func (ts *TwoSum) Describe() {
 	fmt.Printf("TwoSum: %s\n", ts.description)
 
 	for i, e := range ts.examples {
-		nums, _ := e.input.([]any)[0].([]int)
-		target, _ := e.input.([]any)[1].(int)
-		fmt.Printf("Example %d:\n\tInput: \tnums = %v, target = %d\n\tOutput:  %v\n", i, nums, target, e.output)
+		nums, _ := e.Input.([]any)[0].([]int)
+		target, _ := e.Input.([]any)[1].(int)
+		fmt.Printf("Example %d:\n\tInput: \tnums = %v, target = %d\n\tOutput:  %v\n", i, nums, target, e.Output)
 	}
 }
 
@@ -91,32 +92,32 @@ func NewTwoSum() *TwoSum {
 		You may assume that each input would have exactly one solution, and you may not use the same element twice.
 		
 		You can return the answer in any order.`,
-		examples: []IO{
+		examples: []io.IO{
 			{
-				input:  []any{[]int{2, 7, 11, 15}, 9},
-				output: []int{0, 1},
+				Input:  []any{[]int{2, 7, 11, 15}, 9},
+				Output: []int{0, 1},
 			},
 			{
-				input:  []any{[]int{3, 2, 4}, 6},
-				output: []int{1, 2},
+				Input:  []any{[]int{3, 2, 4}, 6},
+				Output: []int{1, 2},
 			},
 			{
-				input:  []any{[]int{3, 3}, 6},
-				output: []int{0, 1},
+				Input:  []any{[]int{3, 3}, 6},
+				Output: []int{0, 1},
 			},
 		},
-		testData: []IO{
+		testData: []io.IO{
 			{
-				input:  []any{[]int{2, 7, 11, 15}, 9},
-				output: []int{0, 1},
+				Input:  []any{[]int{2, 7, 11, 15}, 9},
+				Output: []int{0, 1},
 			},
 			{
-				input:  []any{[]int{3, 2, 4}, 6},
-				output: []int{1, 2},
+				Input:  []any{[]int{3, 2, 4}, 6},
+				Output: []int{1, 2},
 			},
 			{
-				input:  []any{[]int{3, 3}, 6},
-				output: []int{0, 1},
+				Input:  []any{[]int{3, 3}, 6},
+				Output: []int{0, 1},
 			},
 		},
 		versions: []func(nums []int, target int) []int{},

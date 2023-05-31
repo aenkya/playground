@@ -6,12 +6,14 @@ import (
 	"runtime"
 	"strings"
 	"unicode"
+
+	"enkya.org/playground/practice/io"
 )
 
 type IsValidPalindrome struct {
 	description string
-	examples    []IO
-	testData    []IO
+	examples    []io.IO
+	testData    []io.IO
 	versions    []func(s string) bool
 }
 
@@ -29,7 +31,7 @@ func (vp *IsValidPalindrome) Describe() {
 	fmt.Println("Examples:")
 
 	for _, e := range vp.examples {
-		fmt.Printf("Input: %v\nOutput: %t\n", e.input, e.output)
+		fmt.Printf("Input: %v\nOutput: %t\n", e.Input, e.Output)
 	}
 }
 
@@ -51,12 +53,12 @@ func (vp *IsValidPalindrome) testFunction(f func(s string) bool) error {
 	fmt.Println("Function name:", functionName)
 
 	for _, e := range vp.testData {
-		nums, _ := e.input.(string)
-		expected, _ := e.output.(bool)
+		nums, _ := e.Input.(string)
+		expected, _ := e.Output.(bool)
 		result := f(nums)
 
 		if result != expected {
-			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.input, expected, result)
+			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, result)
 		}
 	}
 
@@ -100,11 +102,15 @@ func removeNonAlphanumeric(s string) string {
 func NewIsValidPalindrome() *IsValidPalindrome {
 	p := &IsValidPalindrome{
 		description: "Given a string s, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.",
-		examples:    []IO{{"radar", true}, {"level", true}, {"not", false}},
-		testData: []IO{
-			{"race a car", false},
-			{"A man, a plan, a canal: Panama", true},
-			{"0P", false},
+		examples: []io.IO{
+			{Input: "radar", Output: true},
+			{Input: "level", Output: true},
+			{Input: "not", Output: false},
+		},
+		testData: []io.IO{
+			{Input: "race a car", Output: false},
+			{Input: "A man, a plan, a canal: Panama", Output: true},
+			{Input: "0P", Output: false},
 		},
 		versions: []func(s string) bool{},
 	}

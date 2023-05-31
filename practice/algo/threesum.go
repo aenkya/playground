@@ -7,13 +7,14 @@ import (
 	"sort"
 	"strings"
 
+	"enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
 )
 
 type ThreeSum struct {
 	description string
-	examples    []IO
-	testData    []IO
+	examples    []io.IO
+	testData    []io.IO
 	versions    []func(nums []int) [][]int
 }
 
@@ -158,13 +159,13 @@ func (ts *ThreeSum) testFunction(f func(nums []int) [][]int) error {
 	fmt.Println("Function name:", functionName)
 
 	for _, e := range ts.testData {
-		nums, _ := e.input.([]int)
-		expected, _ := e.output.([][]int)
+		nums, _ := e.Input.([]int)
+		expected, _ := e.Output.([][]int)
 		result := f(nums)
 
 		for i, r := range result {
 			if !utils.CompareIntSlice(r, expected[i]) {
-				return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.input, expected, result)
+				return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, result)
 			}
 		}
 	}
@@ -177,7 +178,7 @@ func (ts *ThreeSum) Describe() {
 	fmt.Println("Examples:")
 
 	for _, e := range ts.examples {
-		fmt.Printf("Input: %v\nOutput: %v\n", e.input, e.output)
+		fmt.Printf("Input: %v\nOutput: %v\n", e.Input, e.Output)
 	}
 }
 
@@ -186,32 +187,32 @@ func NewThreeSum() *ThreeSum {
 		description: `Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
 
 		Notice that the solution set must not contain duplicate triplets.`,
-		examples: []IO{
+		examples: []io.IO{
 			{
-				input:  []any{[]int{-1, 0, 1, 2, -1, -4}},
-				output: [][]int{{-1, 0, 1}, {-1, -1, 2}},
+				Input:  []any{[]int{-1, 0, 1, 2, -1, -4}},
+				Output: [][]int{{-1, 0, 1}, {-1, -1, 2}},
 			},
 			{
-				input:  []any{[]int{0, 1, 1}},
-				output: [][]int{},
+				Input:  []any{[]int{0, 1, 1}},
+				Output: [][]int{},
 			},
 			{
-				input:  []any{[]int{0, 0, 0}},
-				output: [][]int{{0, 0, 0}},
+				Input:  []any{[]int{0, 0, 0}},
+				Output: [][]int{{0, 0, 0}},
 			},
 		},
-		testData: []IO{
+		testData: []io.IO{
 			{
-				input:  []int{-1, 0, 1, 2, -1, -4},
-				output: [][]int{{-1, 0, 1}, {-1, -1, 2}},
+				Input:  []int{-1, 0, 1, 2, -1, -4},
+				Output: [][]int{{-1, 0, 1}, {-1, -1, 2}},
 			},
 			{
-				input:  []int{0, 1, 1},
-				output: [][]int{},
+				Input:  []int{0, 1, 1},
+				Output: [][]int{},
 			},
 			{
-				input:  []int{0, 0, 0},
-				output: [][]int{{0, 0, 0}},
+				Input:  []int{0, 0, 0},
+				Output: [][]int{{0, 0, 0}},
 			},
 		},
 		versions: []func(nums []int) [][]int{},

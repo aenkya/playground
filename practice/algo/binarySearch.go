@@ -5,12 +5,14 @@ import (
 	"reflect"
 	"runtime"
 	"strings"
+
+	"enkya.org/playground/practice/io"
 )
 
 type BinarySearch struct {
 	description string
-	examples    []IO
-	testData    []IO
+	examples    []io.IO
+	testData    []io.IO
 	versions    []func([]int, int) int
 }
 
@@ -38,13 +40,13 @@ func (bs *BinarySearch) testFunction(f func([]int, int) int) error {
 	fmt.Println("Function name:", functionName)
 
 	for _, e := range bs.testData {
-		nums, _ := e.input.([]any)[0].([]int)
-		target, _ := e.input.([]any)[1].(int)
-		expected, _ := e.output.(int)
+		nums, _ := e.Input.([]any)[0].([]int)
+		target, _ := e.Input.([]any)[1].(int)
+		expected, _ := e.Output.(int)
 		result := f(nums, target)
 
 		if result != expected {
-			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.input, expected, result)
+			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, result)
 		}
 	}
 
@@ -56,7 +58,7 @@ func (bs *BinarySearch) Describe() {
 	fmt.Println("Examples:")
 
 	for _, e := range bs.examples {
-		fmt.Printf("Input: %v\nOutput: %v\n", e.input, e.output)
+		fmt.Printf("Input: %v\nOutput: %v\n", e.Input, e.Output)
 	}
 }
 
@@ -90,28 +92,28 @@ func (bs *BinarySearch) binarySearchV1(a []int, t int) int {
 func NewBinarySearch() *BinarySearch {
 	bs := &BinarySearch{
 		description: "find target number position given sorted list of integers",
-		examples: []IO{
+		examples: []io.IO{
 			{
-				[]any{[]int{1, 3, 4, 7, 9}, 3},
-				1,
+				Input:  []any{[]int{1, 3, 4, 7, 9}, 3},
+				Output: 1,
 			},
 			{
-				[]any{[]int{1, 3, 4, 7, 9}, 8},
-				-1,
+				Input:  []any{[]int{1, 3, 4, 7, 9}, 8},
+				Output: -1,
 			},
 		},
-		testData: []IO{
+		testData: []io.IO{
 			{
-				[]any{[]int{}, 3},
-				-1,
+				Input:  []any{[]int{}, 3},
+				Output: -1,
 			},
 			{
-				[]any{[]int{1, 3, 4, 7, 9}, 3},
-				1,
+				Input:  []any{[]int{1, 3, 4, 7, 9}, 3},
+				Output: 1,
 			},
 			{
-				[]any{[]int{1, 3, 4, 7, 9}, 7},
-				3,
+				Input:  []any{[]int{1, 3, 4, 7, 9}, 7},
+				Output: 3,
 			},
 		},
 		versions: []func([]int, int) int{},

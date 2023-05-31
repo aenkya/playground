@@ -3,12 +3,15 @@
 
 package practice
 
-import (
-	"enkya.org/playground/practice/algo"
-)
+import "enkya.org/playground/practice/io"
 
-func Practice() {
-	ap := algo.Practice()
+type Type struct {
+	algorithms    map[string]io.Algo
+	challengeName string
+}
+
+func StartPractice() {
+	ap := AlgoPractice()
 
 	a, err := ap.GetAlgo("binarySearch")
 	if err != nil {

@@ -6,5 +6,5 @@ package main
 import "enkya.org/playground/practice"
 
 func main() {
-	practice.Practice()
+	practice.StartPractice()
 }
