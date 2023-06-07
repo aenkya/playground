@@ -17,6 +17,55 @@ type SpiralMatrix struct {
 	versions    []func(matrix [][]int) []int
 }
 
+// uses recursion
+func (sm *SpiralMatrix) spiralMatrixV1(m [][]int) []int {
+	return recursiveSMG(m, 0, len(m)-1, 0, len(m[0])-1, []int{})
+}
+
+func recursiveSMG(m [][]int, starti, endi, startj, endj int, output []int) []int {
+	if endi < starti {
+		return output
+	}
+
+	if endj < startj {
+		return output
+	}
+
+	if starti == endi {
+		for j := startj; j < endj; j++ {
+			output = append(output, m[starti][j])
+		}
+
+		return output
+	}
+
+	if startj == endj {
+		for i := starti; i < endi; i++ {
+			output = append(output, m[i][startj])
+		}
+
+		return output
+	}
+
+	for j := startj; j <= endj; j++ {
+		output = append(output, m[starti][j])
+	}
+
+	for i := starti + 1; i <= endi; i++ {
+		output = append(output, m[i][endj])
+	}
+
+	for j := endj - 1; j >= startj; j-- {
+		output = append(output, m[endi][j])
+	}
+
+	for i := endi - 1; i > starti; i-- {
+		output = append(output, m[i][startj])
+	}
+
+	return recursiveSMG(m, starti+1, endi-1, startj+1, endj-1, output)
+}
+
 func (sm *SpiralMatrix) Describe() {
 	fmt.Printf("\nDescription: %s\n", sm.description)
 	fmt.Println("Examples:")
@@ -102,53 +151,4 @@ func NewSpiralMatrix() *SpiralMatrix {
 	m.versions = append(m.versions, m.spiralMatrixV1)
 
 	return m
-}
-
-// uses recursion
-func (sm *SpiralMatrix) spiralMatrixV1(m [][]int) []int {
-	return recursiveSMG(m, 0, len(m)-1, 0, len(m[0])-1, []int{})
-}
-
-func recursiveSMG(m [][]int, starti, endi, startj, endj int, output []int) []int {
-	if endi < starti {
-		return output
-	}
-
-	if endj < startj {
-		return output
-	}
-
-	if starti == endi {
-		for j := startj; j < endj; j++ {
-			output = append(output, m[starti][j])
-		}
-
-		return output
-	}
-
-	if startj == endj {
-		for i := starti; i < endi; i++ {
-			output = append(output, m[i][startj])
-		}
-
-		return output
-	}
-
-	for j := startj; j <= endj; j++ {
-		output = append(output, m[starti][j])
-	}
-
-	for i := starti + 1; i <= endi; i++ {
-		output = append(output, m[i][endj])
-	}
-
-	for j := endj - 1; j >= startj; j-- {
-		output = append(output, m[endi][j])
-	}
-
-	for i := endi - 1; i > starti; i-- {
-		output = append(output, m[i][startj])
-	}
-
-	return recursiveSMG(m, starti+1, endi-1, startj+1, endj-1, output)
 }

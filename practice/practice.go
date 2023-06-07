@@ -13,7 +13,7 @@ type Type struct {
 func StartPractice() {
 	ap := AlgoPractice()
 
-	a, err := ap.GetAlgo("binarySearch")
+	a, err := ap.GetAlgo("spiralMatrix")
 	if err != nil {
 		panic(err)
 	}

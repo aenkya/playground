@@ -17,6 +17,40 @@ type IsValidPalindrome struct {
 	versions    []func(s string) bool
 }
 
+func (vp *IsValidPalindrome) isValidPalindromeV1(s string) bool {
+	s = strings.ToLower(s)
+	s = removeNonAlphanumeric(s)
+
+	if len(s) < 2 {
+		return true
+	}
+
+	i, j := 0, len(s)-1
+
+	for i < j {
+		if s[i] != s[j] {
+			return false
+		}
+
+		i++
+		j--
+	}
+
+	return true
+}
+
+func removeNonAlphanumeric(s string) string {
+	var b strings.Builder
+
+	for _, r := range s {
+		if unicode.IsLetter(r) || unicode.IsDigit(r) {
+			b.WriteRune(r)
+		}
+	}
+
+	return b.String()
+}
+
 func (vp *IsValidPalindrome) RunAlgo() {
 	fmt.Println("Running IsValidPalindrome algo....")
 	defer fmt.Println("Finished running IsValidPalindrome algo....")
@@ -63,40 +97,6 @@ func (vp *IsValidPalindrome) testFunction(f func(s string) bool) error {
 	}
 
 	return nil
-}
-
-func (vp *IsValidPalindrome) isValidPalindromeV1(s string) bool {
-	s = strings.ToLower(s)
-	s = removeNonAlphanumeric(s)
-
-	if len(s) < 2 {
-		return true
-	}
-
-	i, j := 0, len(s)-1
-
-	for i < j {
-		if s[i] != s[j] {
-			return false
-		}
-
-		i++
-		j--
-	}
-
-	return true
-}
-
-func removeNonAlphanumeric(s string) string {
-	var b strings.Builder
-
-	for _, r := range s {
-		if unicode.IsLetter(r) || unicode.IsDigit(r) {
-			b.WriteRune(r)
-		}
-	}
-
-	return b.String()
 }
 
 func NewIsValidPalindrome() *IsValidPalindrome {

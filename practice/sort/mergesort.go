@@ -17,51 +17,6 @@ type MergeSort struct {
 	versions    []func([]int) []int
 }
 
-func (bs *MergeSort) RunAlgo() {
-	if err := bs.Test(); err != nil {
-		fmt.Printf("Error: %v\n", err)
-	}
-}
-
-func (bs *MergeSort) Test() error {
-	for i, v := range bs.versions {
-		fmt.Println("Testing version", i+1)
-
-		if err := bs.testFunction(v); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (bs *MergeSort) testFunction(f func([]int) []int) error {
-	functionNameParts := strings.Split(runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name(), ".")
-	functionName := functionNameParts[len(functionNameParts)-1]
-	fmt.Println("Function name:", functionName)
-
-	for _, e := range bs.testData {
-		nums, _ := e.Input.([]int)
-		expected, _ := e.Output.([]int)
-		actual := f(nums)
-
-		if !utils.CompareIntSlice(expected, actual) {
-			return fmt.Errorf("expected %v, got %v", expected, actual)
-		}
-	}
-
-	return nil
-}
-
-func (bs *MergeSort) Describe() {
-	fmt.Printf("\nDescription: %s\n", bs.description)
-	fmt.Println("Examples:")
-
-	for _, e := range bs.examples {
-		fmt.Printf("Input: %v\nOutput: %v\n", e.Input, e.Output)
-	}
-}
-
 func (bs *MergeSort) MergeSortV1(a []int) []int {
 	if len(a) == 0 || len(a) == 1 {
 		return a
@@ -104,6 +59,52 @@ func merge(left, right []int) []int {
 	}
 
 	return result
+}
+
+func (bs *MergeSort) RunAlgo() {
+	if err := bs.Test(); err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
+}
+
+func (bs *MergeSort) Test() error {
+	for i, v := range bs.versions {
+		fmt.Println("Testing version", i+1)
+
+		if err := bs.testFunction(v); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (bs *MergeSort) testFunction(f func([]int) []int) error {
+	defer println("...testing complete")
+	functionNameParts := strings.Split(runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name(), ".")
+	functionName := functionNameParts[len(functionNameParts)-1]
+	fmt.Printf("Function name:%s...\n", functionName)
+
+	for _, e := range bs.testData {
+		nums, _ := e.Input.([]int)
+		expected, _ := e.Output.([]int)
+		actual := f(nums)
+
+		if !utils.CompareIntSlice(expected, actual) {
+			return fmt.Errorf("expected %v, got %v", expected, actual)
+		}
+	}
+
+	return nil
+}
+
+func (bs *MergeSort) Describe() {
+	fmt.Printf("\nDescription: %s\n", bs.description)
+	fmt.Println("Examples:")
+
+	for _, e := range bs.examples {
+		fmt.Printf("Input: %v\nOutput: %v\n", e.Input, e.Output)
+	}
 }
 
 func NewMergeSort() *MergeSort {

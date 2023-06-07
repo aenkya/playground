@@ -14,15 +14,6 @@ type TwoSum struct {
 	versions    []func(nums []int, target int) []int
 }
 
-func (ts *TwoSum) RunAlgo() {
-	fmt.Println("Running TwoSum algo....")
-	defer fmt.Println("Finished running TwoSum algo....")
-
-	if err := ts.Test(); err != nil {
-		fmt.Printf("Error: %v\n", err)
-	}
-}
-
 func (ts *TwoSum) twoSumV1(nums []int, target int) []int {
 	// Brute force
 	for i, e := range nums {
@@ -48,6 +39,15 @@ func (ts *TwoSum) twoSumV2(nums []int, target int) []int {
 	}
 
 	return []int{}
+}
+
+func (ts *TwoSum) RunAlgo() {
+	fmt.Println("Running TwoSum algo....")
+	defer fmt.Println("Finished running TwoSum algo....")
+
+	if err := ts.Test(); err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
 }
 
 func (ts *TwoSum) Test() error {

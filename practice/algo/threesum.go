@@ -18,15 +18,6 @@ type ThreeSum struct {
 	versions    []func(nums []int) [][]int
 }
 
-func (ts *ThreeSum) RunAlgo() {
-	fmt.Println("Running ThreeSum algo....")
-	defer fmt.Println("Finished running ThreeSum algo....")
-
-	if err := ts.Test(); err != nil {
-		fmt.Printf("Error: %v\n", err)
-	}
-}
-
 func (ts *ThreeSum) threeSumV1(nums []int) [][]int {
 	// Brute force O(n^3)
 	sort.Ints(nums)
@@ -139,6 +130,15 @@ func (ts *ThreeSum) threeSumV3(nums []int) [][]int {
 	}
 
 	return res
+}
+
+func (ts *ThreeSum) RunAlgo() {
+	fmt.Println("Running ThreeSum algo....")
+	defer fmt.Println("Finished running ThreeSum algo....")
+
+	if err := ts.Test(); err != nil {
+		fmt.Printf("Error: %v\n", err)
+	}
 }
 
 func (ts *ThreeSum) Test() error {

@@ -16,6 +16,33 @@ type BinarySearch struct {
 	versions    []func([]int, int) int
 }
 
+func (bs *BinarySearch) binarySearchV1(a []int, t int) int {
+	if len(a) == 0 {
+		return -1
+	}
+
+	if len(a) == 1 {
+		return 0
+	}
+
+	l, r := 0, len(a)-1
+
+	for l <= r {
+		m := l + (r-l)/2
+
+		switch {
+		case t == a[m]:
+			return m
+		case t > a[m]:
+			l = m + 1
+		default:
+			r = m - 1
+		}
+	}
+
+	return -1
+}
+
 func (bs *BinarySearch) RunAlgo() {
 	if err := bs.Test(); err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -60,33 +87,6 @@ func (bs *BinarySearch) Describe() {
 	for _, e := range bs.examples {
 		fmt.Printf("Input: %v\nOutput: %v\n", e.Input, e.Output)
 	}
-}
-
-func (bs *BinarySearch) binarySearchV1(a []int, t int) int {
-	if len(a) == 0 {
-		return -1
-	}
-
-	if len(a) == 1 {
-		return 0
-	}
-
-	l, r := 0, len(a)-1
-
-	for l <= r {
-		m := l + (r-l)/2
-
-		switch {
-		case t == a[m]:
-			return m
-		case t > a[m]:
-			l = m + 1
-		default:
-			r = m - 1
-		}
-	}
-
-	return -1
 }
 
 func NewBinarySearch() *BinarySearch {
