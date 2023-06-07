@@ -66,6 +66,52 @@ func recursiveSMG(m [][]int, starti, endi, startj, endj int, output []int) []int
 	return recursiveSMG(m, starti+1, endi-1, startj+1, endj-1, output)
 }
 
+func (sm *SpiralMatrix) spiralMatrixV2(m [][]int) []int {
+	res := make([]int, 0, len(m)*len(m[0]))
+	starti, endi, startj, endj := 0, len(m)-1, 0, len(m[0])-1
+
+	if len(m) == 0 {
+		return res
+	}
+
+	if endi < starti {
+		return res
+	}
+
+	if endj < startj {
+		return res
+	}
+
+	for starti <= endi {
+		for j := startj; j <= endj; j++ {
+			res = append(res, m[starti][j])
+		}
+
+		for i := starti + 1; i <= endi; i++ {
+			res = append(res, m[i][endj])
+		}
+
+		if starti != endi {
+			for j := endj - 1; j >= startj; j-- {
+				res = append(res, m[endi][j])
+			}
+		}
+
+		if startj != endj {
+			for i := endi - 1; i > starti; i-- {
+				res = append(res, m[i][startj])
+			}
+		}
+
+		starti++
+		endi--
+		startj++
+		endj--
+	}
+
+	return res
+}
+
 func (sm *SpiralMatrix) Describe() {
 	fmt.Printf("\nDescription: %s\n", sm.description)
 	fmt.Println("Examples:")
@@ -85,9 +131,7 @@ func (sm *SpiralMatrix) RunAlgo() {
 }
 
 func (sm *SpiralMatrix) Test() error {
-	for i, v := range sm.versions {
-		fmt.Println("Testing version", i+1)
-
+	for _, v := range sm.versions {
 		if err := sm.testFunction(v); err != nil {
 			return err
 		}
@@ -97,9 +141,11 @@ func (sm *SpiralMatrix) Test() error {
 }
 
 func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
+	defer fmt.Println("..finished testing function")
+
 	functionNameParts := strings.Split(runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name(), ".")
 	functionName := functionNameParts[len(functionNameParts)-1]
-	fmt.Println("Function name:", functionName)
+	fmt.Println("Testing Function:", functionName)
 
 	for _, e := range sm.testData {
 		matrix, _ := e.Input.([][]int)
@@ -109,6 +155,8 @@ func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
 		if !utils.CompareIntSlice(r, expected) {
 			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, r)
 		}
+
+		fmt.Printf(".")
 	}
 
 	return nil
@@ -148,7 +196,7 @@ func NewSpiralMatrix() *SpiralMatrix {
 		versions: []func([][]int) []int{},
 	}
 
-	m.versions = append(m.versions, m.spiralMatrixV1)
+	m.versions = append(m.versions, m.spiralMatrixV2, m.spiralMatrixV1)
 
 	return m
 }
