@@ -81,6 +81,7 @@ func (bs *MergeSort) Test() error {
 
 func (bs *MergeSort) testFunction(f func([]int) []int) error {
 	defer println("...testing complete")
+
 	functionNameParts := strings.Split(runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name(), ".")
 	functionName := functionNameParts[len(functionNameParts)-1]
 	fmt.Printf("Function name:%s...\n", functionName)
