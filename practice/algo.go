@@ -57,5 +57,8 @@ func AlgoPractice() Type {
 	ms := sort.NewMergeSort()
 	p.SetAlgo("mergeSort", ms)
 
+	rw := algo.NewRepeatedWords()
+	p.SetAlgo("repeatedWords", rw)
+
 	return p
 }
