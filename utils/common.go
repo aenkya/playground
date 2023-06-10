@@ -1,6 +1,6 @@
 package utils
 
-func CompareIntSlice(a, b []int) bool {
+func CompareSlice[T comparable](a, b []T) bool {
 	if len(a) != len(b) {
 		return false
 	}

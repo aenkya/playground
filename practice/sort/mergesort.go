@@ -91,7 +91,7 @@ func (bs *MergeSort) testFunction(f func([]int) []int) error {
 		expected, _ := e.Output.([]int)
 		actual := f(nums)
 
-		if !utils.CompareIntSlice(expected, actual) {
+		if !utils.CompareSlice(expected, actual) {
 			return fmt.Errorf("expected %v, got %v", expected, actual)
 		}
 	}

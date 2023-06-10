@@ -67,7 +67,7 @@ func (ts *TwoSum) testFunction(f func(nums []int, target int) []int) error {
 		expected, _ := e.Output.([]int)
 		actual := f(nums, target)
 
-		if !utils.CompareIntSlice(expected, actual) {
+		if !utils.CompareSlice(expected, actual) {
 			return fmt.Errorf("expected %v, got %v", expected, actual)
 		}
 	}

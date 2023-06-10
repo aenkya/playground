@@ -152,7 +152,7 @@ func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
 		expected, _ := e.Output.([]int)
 		r := f(matrix)
 
-		if !utils.CompareIntSlice(r, expected) {
+		if !utils.CompareSlice(r, expected) {
 			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, r)
 		}
 
