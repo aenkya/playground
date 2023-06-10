@@ -60,5 +60,8 @@ func AlgoPractice() Type {
 	rw := algo.NewRepeatedWords()
 	p.SetAlgo("repeatedWords", rw)
 
+	nq := algo.NewNQueens()
+	p.SetAlgo("nQueens", nq)
+
 	return p
 }
