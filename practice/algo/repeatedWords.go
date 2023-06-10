@@ -3,6 +3,7 @@ package algo
 import (
 	"fmt"
 	"reflect"
+	"regexp"
 	"runtime"
 	"strings"
 
@@ -16,8 +17,14 @@ type RepeatedWords struct {
 	versions    []func(string) int
 }
 
+func removeNonAlphanumericRegex(s string) string {
+	re := regexp.MustCompile("[^a-zA-Z0-9 ]+")
+	return re.ReplaceAllString(s, "")
+}
+
 func (r *RepeatedWords) numOfRepeatedWordsv1(s string) int {
 	s = strings.ToLower(s)
+	s = removeNonAlphanumericRegex(s)
 	words := strings.Split(s, " ")
 	wordsMap := make(map[string]int)
 	totalNumOfRepeatedWords := 0
@@ -32,7 +39,7 @@ func (r *RepeatedWords) numOfRepeatedWordsv1(s string) int {
 		}
 	}
 
-	return 0
+	return totalNumOfRepeatedWords
 }
 
 func (r *RepeatedWords) RunAlgo() {
@@ -82,14 +89,14 @@ func NewRepeatedWords() *RepeatedWords {
 	t := &RepeatedWords{
 		description: "Given a string, find the number of repeated words in it.",
 		examples: []io.IO{
-			{Input: "This is a test string. This is a test string.", Output: 4},
-			{Input: "This is a test string. This is a test string. This is a test string.", Output: 8},
-			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 12},
+			{Input: "This is a test string. This is a test string.", Output: 5},
+			{Input: "This is a test string. This is a test string. This is a test string.", Output: 10},
+			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 14},
 		},
 		testData: []io.IO{
-			{Input: "This is a test string. This is a test string.", Output: 4},
-			{Input: "This is a test string. This is a test string. This is a test string.", Output: 8},
-			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 12},
+			{Input: "This isn't a test string. This isn't a test string.", Output: 5},
+			{Input: "This is a test string. This is a test string. This is a test string.", Output: 10},
+			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 15},
 		},
 		versions: []func(string) int{},
 	}
