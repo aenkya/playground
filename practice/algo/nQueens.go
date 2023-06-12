@@ -20,17 +20,8 @@ type NQueens struct {
 }
 
 // Runtime complexity: O(n^2N)
-func (nq *NQueens) nQueensV1(n int) [][]string {
-	// pseudo code
-	// create a board of size n x n
-	// place a queen in the first row
-	// check if the queen is safe
-	// if the queen is not safe, move it to the next column
-	// if the queen is safe, place the next queen in the next row
-	// continue this until the queen is safe
-	// if the queen is safe, place the next queen in the next row
-	// repeat this until all the queens are placed
-	// if all the queens are placed, return the board
+func (nq *NQueens) nQueensV1(_ int) [][]string {
+	// TODO: Implement brute force solution
 	return [][]string{}
 }
 
@@ -55,21 +46,24 @@ func (nq *NQueens) backtrack(row int, cols, diags, antidiags *oss.OrderedSet, st
 	n := len(state)
 
 	if row == n {
-		results := nq.results
-		nq.results = append(results, nq.createBoard(state))
-		nq.results = make([][]string, 0)
+		nq.results = append(nq.results, nq.createBoard(state))
+		return
 	}
 
 	for col := 0; col < n; col++ {
 		currDiag := row - col
 		currAntiDiag := row + col
-		if cols.Contains(col) || diags.Contains(currDiag) || antidiags.Contains(currAntiDiag) {
+
+		if cols.Contains(col) ||
+			diags.Contains(currDiag) ||
+			antidiags.Contains(currAntiDiag) {
 			continue
 		}
 
 		cols.Add(col)
 		diags.Add(currDiag)
 		antidiags.Add(currAntiDiag)
+
 		state[row][col] = "Q"
 
 		nq.backtrack(row+1, cols, diags, antidiags, state)
@@ -77,9 +71,9 @@ func (nq *NQueens) backtrack(row int, cols, diags, antidiags *oss.OrderedSet, st
 		cols.Remove(col)
 		diags.Remove(currDiag)
 		antidiags.Remove(currAntiDiag)
+
 		state[row][col] = "."
 	}
-
 }
 
 func (nq *NQueens) createBoard(state [][]string) []string {
@@ -118,6 +112,7 @@ func (nq *NQueens) testFunction(f func(n int) [][]string) error {
 		s, _ := e.Input.(int)
 		expected, _ := e.Output.([][]string)
 		result := f(s)
+		nq.results = [][]string{}
 
 		for i, r := range result {
 			if !utils.CompareSlice(r, expected[i]) {
