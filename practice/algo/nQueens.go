@@ -8,6 +8,7 @@ import (
 
 	"enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
+	oss "github.com/goombaio/orderedset"
 )
 
 type NQueens struct {
@@ -42,36 +43,40 @@ func (nq *NQueens) nQueensV2(n int) [][]string {
 		}
 	}
 
-	nq.backtrack(0, make(map[int]bool, 0), make(map[int]bool, 0), make(map[int]bool), emptyBoard)
+	// TODO: Implement our own ordered set
+	cols, diags, antidiags := oss.NewOrderedSet(), oss.NewOrderedSet(), oss.NewOrderedSet()
+
+	nq.backtrack(0, cols, diags, antidiags, emptyBoard)
 
 	return nq.results
 }
 
-func (nq *NQueens) backtrack(row int, cols, diags, antidiags map[int]bool, state [][]string) {
+func (nq *NQueens) backtrack(row int, cols, diags, antidiags *oss.OrderedSet, state [][]string) {
 	n := len(state)
 
 	if row == n {
 		results := nq.results
 		nq.results = append(results, nq.createBoard(state))
+		nq.results = make([][]string, 0)
 	}
 
 	for col := 0; col < n; col++ {
 		currDiag := row - col
 		currAntiDiag := row + col
-		if utils.Contains(cols, col) || utils.Contains(diags, currDiag) || utils.Contains(antidiags, currAntiDiag) {
+		if cols.Contains(col) || diags.Contains(currDiag) || antidiags.Contains(currAntiDiag) {
 			continue
 		}
 
-		cols[col] = true
-		diags[currDiag] = true
-		antidiags[currDiag] = true
+		cols.Add(col)
+		diags.Add(currDiag)
+		antidiags.Add(currAntiDiag)
 		state[row][col] = "Q"
 
 		nq.backtrack(row+1, cols, diags, antidiags, state)
 
-		delete(cols, col)
-		delete(diags, currDiag)
-		delete(antidiags, currAntiDiag)
+		cols.Remove(col)
+		diags.Remove(currDiag)
+		antidiags.Remove(currAntiDiag)
 		state[row][col] = "."
 	}
 
