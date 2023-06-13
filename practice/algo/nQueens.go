@@ -8,7 +8,6 @@ import (
 
 	"enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
-	oss "github.com/goombaio/orderedset"
 )
 
 type NQueens struct {
@@ -34,15 +33,14 @@ func (nq *NQueens) nQueensV2(n int) [][]string {
 		}
 	}
 
-	// TODO: Implement our own ordered set
-	cols, diags, antidiags := oss.NewOrderedSet(), oss.NewOrderedSet(), oss.NewOrderedSet()
+	cols, diags, antidiags := utils.NewOrderedSet(), utils.NewOrderedSet(), utils.NewOrderedSet()
 
 	nq.backtrack(0, cols, diags, antidiags, emptyBoard)
 
 	return nq.results
 }
 
-func (nq *NQueens) backtrack(row int, cols, diags, antidiags *oss.OrderedSet, state [][]string) {
+func (nq *NQueens) backtrack(row int, cols, diags, antidiags *utils.OrderedSet, state [][]string) {
 	n := len(state)
 
 	if row == n {
