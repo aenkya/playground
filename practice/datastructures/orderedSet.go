@@ -39,9 +39,18 @@ func (is *OrderedSet) Get(key any) (any, bool) {
 	is.mu.Lock()
 	defer is.mu.Unlock()
 
-	val, ok := is.store[key]
+	val, ok := is.keys[key]
 
-	return val, ok
+	if !ok {
+		return nil, false
+	}
+
+	v, ok := is.store[val]
+	if !ok {
+		return nil, false
+	}
+
+	return v, ok
 }
 
 func (is *OrderedSet) Remove(val any) {
