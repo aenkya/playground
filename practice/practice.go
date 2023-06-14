@@ -17,6 +17,7 @@ func StartPractice() {
 	if err != nil {
 		panic(err)
 	}
+
 	a.LoadTestData()
 	a.RunAlgo()
 }

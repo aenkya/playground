@@ -18,8 +18,9 @@ func (ap *Type) RunAlgo() {
 	fmt.Println("Running algo practice")
 }
 
-func (ap *Type) SetAlgo(name string, a io.Algo) {
+func (ap *Type) SetAlgo(name string, a io.Algo) *Type {
 	ap.algorithms[name] = a
+	return ap
 }
 
 func (ap *Type) GetAlgo(name string) (io.Algo, error) {
@@ -38,33 +39,15 @@ func (ap *Type) SetChallengeName(name string) {
 func AlgoPractice() Type {
 	p := NewAlgoPractice()
 	p.SetChallengeName("leetcode")
-
-	ts := algo.NewTwoSum()
-	p.SetAlgo("twosum", ts)
-
-	ts3 := algo.NewThreeSum()
-	p.SetAlgo("threesum", ts3)
-
-	isValidPalindrome := algo.NewIsValidPalindrome()
-	p.SetAlgo("isValidPalindrome", isValidPalindrome)
-
-	spiralMatrix := algo.NewSpiralMatrix()
-	p.SetAlgo("spiralMatrix", spiralMatrix)
-
-	bs := algo.NewBinarySearch()
-	p.SetAlgo("binarySearch", bs)
-
-	ms := sort.NewMergeSort()
-	p.SetAlgo("mergeSort", ms)
-
-	rw := algo.NewRepeatedWords()
-	p.SetAlgo("repeatedWords", rw)
-
-	nq := algo.NewNQueens()
-	p.SetAlgo("nQueens", nq)
-
-	ls := algo.NewLongestSubstring()
-	p.SetAlgo("longestsubstring", ls)
+	p.SetAlgo("longestsubstring", algo.NewLongestSubstring()).
+		SetAlgo("twosum", algo.NewTwoSum()).
+		SetAlgo("threesum", algo.NewThreeSum()).
+		SetAlgo("isValidPalindrome", algo.NewIsValidPalindrome()).
+		SetAlgo("spiralMatrix", algo.NewSpiralMatrix()).
+		SetAlgo("binarySearch", algo.NewBinarySearch()).
+		SetAlgo("mergeSort", sort.NewMergeSort()).
+		SetAlgo("repeatedWords", algo.NewRepeatedWords()).
+		SetAlgo("nQueens", algo.NewNQueens())
 
 	return p
 }
