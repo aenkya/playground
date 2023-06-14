@@ -162,6 +162,21 @@ func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
 	return nil
 }
 
+func (sm *SpiralMatrix) LoadTestData() {
+	sm.testData = []io.IO{
+		{
+			Input: [][]int{
+				{1, 2, 3, 4, 5},
+				{6, 7, 8, 9, 10},
+				{11, 12, 13, 14, 15},
+				{16, 17, 18, 19, 20},
+				{21, 22, 23, 24, 25},
+			},
+			Output: []int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
+		},
+	}
+}
+
 func NewSpiralMatrix() *SpiralMatrix {
 	m := &SpiralMatrix{
 		description: `Given an m x n matrix, return all elements of the matrix in spiral order.`,
@@ -179,18 +194,6 @@ func NewSpiralMatrix() *SpiralMatrix {
 			{
 				Input:  [][]int{{1, 2}, {3, 4}},
 				Output: []int{1, 2, 4, 3},
-			},
-		},
-		testData: []io.IO{
-			{
-				Input: [][]int{
-					{1, 2, 3, 4, 5},
-					{6, 7, 8, 9, 10},
-					{11, 12, 13, 14, 15},
-					{16, 17, 18, 19, 20},
-					{21, 22, 23, 24, 25},
-				},
-				Output: []int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
 			},
 		},
 		versions: []func([][]int) []int{},

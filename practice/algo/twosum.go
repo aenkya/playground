@@ -85,6 +85,23 @@ func (ts *TwoSum) Describe() {
 	}
 }
 
+func (ts *TwoSum) LoadTestData() {
+	ts.testData = []io.IO{
+		{
+			Input:  []any{[]int{2, 7, 11, 15}, 9},
+			Output: []int{0, 1},
+		},
+		{
+			Input:  []any{[]int{3, 2, 4}, 6},
+			Output: []int{1, 2},
+		},
+		{
+			Input:  []any{[]int{3, 3}, 6},
+			Output: []int{0, 1},
+		},
+	}
+}
+
 func NewTwoSum() *TwoSum {
 	t := &TwoSum{
 		description: `Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
@@ -93,20 +110,6 @@ func NewTwoSum() *TwoSum {
 		
 		You can return the answer in any order.`,
 		examples: []io.IO{
-			{
-				Input:  []any{[]int{2, 7, 11, 15}, 9},
-				Output: []int{0, 1},
-			},
-			{
-				Input:  []any{[]int{3, 2, 4}, 6},
-				Output: []int{1, 2},
-			},
-			{
-				Input:  []any{[]int{3, 3}, 6},
-				Output: []int{0, 1},
-			},
-		},
-		testData: []io.IO{
 			{
 				Input:  []any{[]int{2, 7, 11, 15}, 9},
 				Output: []int{0, 1},

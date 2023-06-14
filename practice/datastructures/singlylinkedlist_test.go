@@ -70,7 +70,7 @@ func TestSinglyLinkedList(t *testing.T) {
 			got := make([]int, len(g))
 
 			for i, e := range g {
-				got[i] = e.(int)
+				got[i], _ = e.(int)
 			}
 
 			if !utils.CompareSlice(tt.want, got) {

@@ -108,6 +108,23 @@ func (bs *MergeSort) Describe() {
 	}
 }
 
+func (bs *MergeSort) LoadTestData() {
+	bs.testData = []io.IO{
+		{
+			Input:  []int{},
+			Output: []int{},
+		},
+		{
+			Input:  []int{1, 8, 3, 4, 7, 9},
+			Output: []int{1, 3, 4, 7, 8, 9},
+		},
+		{
+			Input:  []int{4, 1, 0, 8, 3, 4, 7, 9},
+			Output: []int{0, 1, 3, 4, 4, 7, 8, 9},
+		},
+	}
+}
+
 func NewMergeSort() *MergeSort {
 	bs := &MergeSort{
 		description: "find target number position given sorted list of integers",
@@ -119,20 +136,6 @@ func NewMergeSort() *MergeSort {
 			{
 				Input:  []any{[]int{1, 3, 4, 7, 9}, 8},
 				Output: -1,
-			},
-		},
-		testData: []io.IO{
-			{
-				Input:  []int{},
-				Output: []int{},
-			},
-			{
-				Input:  []int{1, 8, 3, 4, 7, 9},
-				Output: []int{1, 3, 4, 7, 8, 9},
-			},
-			{
-				Input:  []int{4, 1, 0, 8, 3, 4, 7, 9},
-				Output: []int{0, 1, 3, 4, 4, 7, 8, 9},
 			},
 		},
 		versions: []func([]int) []int{},

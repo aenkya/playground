@@ -20,6 +20,7 @@ func (sll *SinglyLinkedList) Append(val any) {
 	if sll.head == nil {
 		sll.head = node
 		sll.tail = node
+
 		return
 	}
 
@@ -33,6 +34,7 @@ func (sll *SinglyLinkedList) Prepend(val any) {
 	if sll.head == nil {
 		sll.head = node
 		sll.tail = node
+
 		return
 	}
 
@@ -97,6 +99,7 @@ func (sll *SinglyLinkedList) Reverse() {
 
 func (sll *SinglyLinkedList) ToArray() []any {
 	var arr []any
+
 	current := sll.head
 
 	for current != nil {

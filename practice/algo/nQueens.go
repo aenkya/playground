@@ -7,14 +7,14 @@ import (
 	"strings"
 
 	ds "enkya.org/playground/practice/datastructures"
-	"enkya.org/playground/practice/io"
+	pio "enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
 )
 
 type NQueens struct {
 	description string
-	examples    []io.IO
-	testData    []io.IO
+	examples    []pio.IO
+	testData    []pio.IO
 	results     [][]string
 	versions    []func(n int) [][]string
 }
@@ -132,10 +132,22 @@ func (nq *NQueens) Describe() {
 	}
 }
 
+func (nq *NQueens) SetTestData(testData []pio.IO) {
+	nq.testData = testData
+}
+
+func (nq *NQueens) LoadTestData() {
+	// TODO: Load test data from file
+	nq.testData = []pio.IO{
+		{Input: 4, Output: [][]string{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}}},
+		{Input: 1, Output: [][]string{{"Q"}}},
+	}
+}
+
 func NewNQueens() *NQueens {
 	nq := &NQueens{
 		description: "Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.",
-		examples: []io.IO{
+		examples: []pio.IO{
 			{
 				Input: 4,
 				Output: [][]string{
@@ -145,10 +157,6 @@ func NewNQueens() *NQueens {
 			{Input: 1, Output: [][]string{{"Q"}}},
 		},
 		results: [][]string{},
-		testData: []io.IO{
-			{Input: 4, Output: [][]string{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}}},
-			{Input: 1, Output: [][]string{{"Q"}}},
-		},
 	}
 
 	nq.versions = []func(n int) [][]string{

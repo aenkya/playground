@@ -63,5 +63,8 @@ func AlgoPractice() Type {
 	nq := algo.NewNQueens()
 	p.SetAlgo("nQueens", nq)
 
+	ls := algo.NewLongestSubstring()
+	p.SetAlgo("longestsubstring", ls)
+
 	return p
 }

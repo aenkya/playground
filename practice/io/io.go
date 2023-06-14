@@ -6,7 +6,7 @@ type IO struct {
 }
 
 type Algo interface {
+	LoadTestData()
 	RunAlgo()
 	Describe()
-	Test() error
 }

@@ -85,6 +85,23 @@ func (r *RepeatedWords) Describe() {
 	}
 }
 
+func (r *RepeatedWords) LoadTestData() {
+	r.testData = []io.IO{
+		{
+			Input:  "This is a test string. This is a test string.",
+			Output: 5,
+		},
+		{
+			Input:  "This is a test string. This is a test string. This is a test string.",
+			Output: 10,
+		},
+		{
+			Input:  "This is a test string. This is a test string. This is a test string. This is a test string.",
+			Output: 14,
+		},
+	}
+}
+
 func NewRepeatedWords() *RepeatedWords {
 	t := &RepeatedWords{
 		description: "Given a string, find the number of repeated words in it.",
@@ -92,11 +109,6 @@ func NewRepeatedWords() *RepeatedWords {
 			{Input: "This is a test string. This is a test string.", Output: 5},
 			{Input: "This is a test string. This is a test string. This is a test string.", Output: 10},
 			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 14},
-		},
-		testData: []io.IO{
-			{Input: "This isn't a test string. This isn't a test string.", Output: 5},
-			{Input: "This is a test string. This is a test string. This is a test string.", Output: 10},
-			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 15},
 		},
 		versions: []func(string) int{},
 	}

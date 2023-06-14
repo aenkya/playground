@@ -13,10 +13,10 @@ type Type struct {
 func StartPractice() {
 	ap := AlgoPractice()
 
-	a, err := ap.GetAlgo("nQueens")
+	a, err := ap.GetAlgo("longestsubstring")
 	if err != nil {
 		panic(err)
 	}
-
+	a.LoadTestData()
 	a.RunAlgo()
 }

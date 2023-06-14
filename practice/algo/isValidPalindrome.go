@@ -99,6 +99,14 @@ func (vp *IsValidPalindrome) testFunction(f func(s string) bool) error {
 	return nil
 }
 
+func (vp *IsValidPalindrome) LoadTestData() {
+	vp.testData = []io.IO{
+		{Input: "race a car", Output: false},
+		{Input: "A man, a plan, a canal: Panama", Output: true},
+		{Input: "0P", Output: false},
+	}
+}
+
 func NewIsValidPalindrome() *IsValidPalindrome {
 	p := &IsValidPalindrome{
 		description: "Given a string s, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.",
@@ -106,11 +114,6 @@ func NewIsValidPalindrome() *IsValidPalindrome {
 			{Input: "radar", Output: true},
 			{Input: "level", Output: true},
 			{Input: "not", Output: false},
-		},
-		testData: []io.IO{
-			{Input: "race a car", Output: false},
-			{Input: "A man, a plan, a canal: Panama", Output: true},
-			{Input: "0P", Output: false},
 		},
 		versions: []func(s string) bool{},
 	}

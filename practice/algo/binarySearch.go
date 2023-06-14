@@ -89,6 +89,23 @@ func (bs *BinarySearch) Describe() {
 	}
 }
 
+func (bs *BinarySearch) LoadTestData() {
+	bs.testData = []io.IO{
+		{
+			Input:  []any{[]int{}, 3},
+			Output: -1,
+		},
+		{
+			Input:  []any{[]int{1, 3, 4, 7, 9}, 3},
+			Output: 1,
+		},
+		{
+			Input:  []any{[]int{1, 3, 4, 7, 9}, 7},
+			Output: 3,
+		},
+	}
+}
+
 func NewBinarySearch() *BinarySearch {
 	bs := &BinarySearch{
 		description: "find target number position given sorted list of integers",
@@ -100,20 +117,6 @@ func NewBinarySearch() *BinarySearch {
 			{
 				Input:  []any{[]int{1, 3, 4, 7, 9}, 8},
 				Output: -1,
-			},
-		},
-		testData: []io.IO{
-			{
-				Input:  []any{[]int{}, 3},
-				Output: -1,
-			},
-			{
-				Input:  []any{[]int{1, 3, 4, 7, 9}, 3},
-				Output: 1,
-			},
-			{
-				Input:  []any{[]int{1, 3, 4, 7, 9}, 7},
-				Output: 3,
 			},
 		},
 		versions: []func([]int, int) int{},

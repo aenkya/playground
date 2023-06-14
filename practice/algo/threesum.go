@@ -182,6 +182,23 @@ func (ts *ThreeSum) Describe() {
 	}
 }
 
+func (ts *ThreeSum) LoadTestData() {
+	ts.testData = []io.IO{
+		{
+			Input:  []int{-1, 0, 1, 2, -1, -4},
+			Output: [][]int{{-1, 0, 1}, {-1, -1, 2}},
+		},
+		{
+			Input:  []int{0, 1, 1},
+			Output: [][]int{},
+		},
+		{
+			Input:  []int{0, 0, 0},
+			Output: [][]int{{0, 0, 0}},
+		},
+	}
+}
+
 func NewThreeSum() *ThreeSum {
 	t := &ThreeSum{
 		description: `Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
@@ -198,20 +215,6 @@ func NewThreeSum() *ThreeSum {
 			},
 			{
 				Input:  []any{[]int{0, 0, 0}},
-				Output: [][]int{{0, 0, 0}},
-			},
-		},
-		testData: []io.IO{
-			{
-				Input:  []int{-1, 0, 1, 2, -1, -4},
-				Output: [][]int{{-1, 0, 1}, {-1, -1, 2}},
-			},
-			{
-				Input:  []int{0, 1, 1},
-				Output: [][]int{},
-			},
-			{
-				Input:  []int{0, 0, 0},
 				Output: [][]int{{0, 0, 0}},
 			},
 		},
