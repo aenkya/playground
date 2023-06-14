@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"strings"
 
+	ds "enkya.org/playground/practice/datastructures"
 	"enkya.org/playground/practice/io"
 	"enkya.org/playground/utils"
 )
@@ -33,14 +34,14 @@ func (nq *NQueens) nQueensV2(n int) [][]string {
 		}
 	}
 
-	cols, diags, antidiags := utils.NewOrderedSet(), utils.NewOrderedSet(), utils.NewOrderedSet()
+	cols, diags, antidiags := ds.NewOrderedSet(), ds.NewOrderedSet(), ds.NewOrderedSet()
 
 	nq.backtrack(0, cols, diags, antidiags, emptyBoard)
 
 	return nq.results
 }
 
-func (nq *NQueens) backtrack(row int, cols, diags, antidiags *utils.OrderedSet, state [][]string) {
+func (nq *NQueens) backtrack(row int, cols, diags, antidiags *ds.OrderedSet, state [][]string) {
 	n := len(state)
 
 	if row == n {
