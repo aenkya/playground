@@ -13,7 +13,7 @@ type Type struct {
 func StartPractice() {
 	ap := AlgoPractice()
 
-	a, err := ap.GetAlgo("longestsubstring")
+	a, err := ap.GetAlgo("median2sortedarrays")
 	if err != nil {
 		panic(err)
 	}

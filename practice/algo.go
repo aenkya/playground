@@ -47,7 +47,8 @@ func AlgoPractice() Type {
 		SetAlgo("binarySearch", algo.NewBinarySearch()).
 		SetAlgo("mergeSort", sort.NewMergeSort()).
 		SetAlgo("repeatedWords", algo.NewRepeatedWords()).
-		SetAlgo("nQueens", algo.NewNQueens())
+		SetAlgo("nQueens", algo.NewNQueens()).
+		SetAlgo("median2sortedarrays", algo.NewMedian2SortedArrays())
 
 	return p
 }
