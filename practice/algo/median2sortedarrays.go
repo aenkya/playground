@@ -14,7 +14,7 @@ type Median2SortedArrays struct {
 	versions    []func(nums1 []int, nums2 []int) float64
 }
 
-func (m *Median2SortedArrays) Median2SortedArraysV1(nums1 []int, nums2 []int) float64 {
+func (m *Median2SortedArrays) Median2SortedArraysV1(nums1, nums2 []int) float64 {
 	nums1 = append(nums1, nums2...)
 	sort.Ints(nums1)
 

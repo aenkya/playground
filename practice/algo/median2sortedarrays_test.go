@@ -66,5 +66,4 @@ func TestMedian2SortedArraysV2(t *testing.T) {
 			t.Errorf("Expected %f, got %f", test.expected, actual)
 		}
 	}
-
 }

@@ -84,11 +84,12 @@ func (t *BinaryTree) Delete(v any) {
 	}
 
 	var targetNode, temp *BinaryTreeNode
+
 	q := NewQueue()
 	q.Enqueue(t.Root)
 
 	for q.Len() > 0 {
-		temp = q.Dequeue().(*BinaryTreeNode)
+		temp, _ = q.Dequeue().(*BinaryTreeNode)
 
 		if temp.Value == v {
 			targetNode = temp
@@ -120,7 +121,7 @@ func (t *BinaryTree) deleteDeepest(node *BinaryTreeNode) {
 			return
 		}
 
-		temp := q.Dequeue().(*BinaryTreeNode)
+		temp, _ := q.Dequeue().(*BinaryTreeNode)
 
 		if temp.Right != nil {
 			if temp.Right == node {

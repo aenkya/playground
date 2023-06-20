@@ -6,6 +6,7 @@ import (
 )
 
 func TestQueue(t *testing.T) {
+	//nolint:govet // ignore struct optimisation
 	tests := []struct {
 		name      string
 		operation func() any
@@ -21,9 +22,7 @@ func TestQueue(t *testing.T) {
 				q.Enqueue(3)
 
 				results := []int{}
-				results = append(results, q.Dequeue().(int))
-				results = append(results, q.Dequeue().(int))
-				results = append(results, q.Dequeue().(int))
+				results = append(results, q.Dequeue().(int), q.Dequeue().(int), q.Dequeue().(int))
 
 				return results
 			},
@@ -39,9 +38,7 @@ func TestQueue(t *testing.T) {
 				q.Enqueue(3)
 
 				results := []int{}
-				results = append(results, q.Peek().(int))
-				results = append(results, q.Peek().(int))
-				results = append(results, q.Peek().(int))
+				results = append(results, q.Peek().(int), q.Peek().(int), q.Peek().(int))
 
 				return results
 			},
@@ -94,5 +91,4 @@ func TestQueue(t *testing.T) {
 			}
 		})
 	}
-
 }
