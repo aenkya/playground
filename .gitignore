@@ -40,3 +40,14 @@ tmp/*
 */bin/**
 bin/*
 .env
+
+# add python ignore
+*.py[cod]
+*$py.class
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.egg-info

@@ -3,12 +3,21 @@
 
 package practice
 
-import (
-	"enkya.org/playground/practice/algo"
-)
+import "enkya.org/playground/practice/io"
 
-func Practice() {
-	ap := algo.Practice()
-	ap.SetChallengeName("ReverseArray")
-	ap.RunAlgo()
+type Type struct {
+	algorithms    map[string]io.Algo
+	challengeName string
+}
+
+func StartPractice() {
+	ap := AlgoPractice()
+
+	a, err := ap.GetAlgo("median2sortedarrays")
+	if err != nil {
+		panic(err)
+	}
+
+	a.LoadTestData()
+	a.RunAlgo()
 }
