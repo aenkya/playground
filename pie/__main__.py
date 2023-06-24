@@ -5,13 +5,21 @@ __modules = os.path.abspath(__cwd)
 
 sys.path.append(os.path.abspath(__modules))
 
-from algorithms import is_valid_palindrome
+from algorithms import streams
 
-pal = is_valid_palindrome.palindrome_pairs
+Streams = streams.Streams
 
 def main():
-    pairs = pal(["abcd", "dcba", "lls", "s", "sssll"])
-    print(pairs)
+
+    stream = [
+        "host|target|hero:test, hero:view",
+        "host|target|hero:test-2, hero:view, hero:all",
+        "host|target|hero:test, hero:view, hero:all",
+        "host|target|hero:all"
+    ]
+    inputs = ['hero:all']
+    streams  = Streams('input', 'output')
+    print(streams.get_stream_tags_from_input(stream, inputs))
 
 if __name__ == "__main__":
     main()
