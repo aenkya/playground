@@ -55,3 +55,30 @@ docker-clean:
 docker-all: docker-build docker-run
 
 .PHONY: all help lint build test clean docker-build docker-run docker-push docker-clean docker-all
+
+.lint-setup:
+	curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(shell go env GOPATH)/bin v1.27.0
+
+.lint-setup-mac:
+	brew install golangci/tap/golangci-lint
+
+.docker-setup-mac:
+	brew install docker
+
+.docker-setup-linux:
+	sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+.setup-live-reload:
+	go get github.com/cosmtrek/air@latest
+	go install github.com/cosmtrek/air@latest
+
+.setup-python-virtualenv:
+	python -m venv /pie/.venv
+	source /pie/.venv/bin/activate
+
+.setup-python-dependencies:
+	pip install -r pie/requirements.txt
+
+.setup-python: .setup-python-virtualenv .setup-python-dependencies
+
+.setup: .lint-setup .setup-live-reload .setup-python
