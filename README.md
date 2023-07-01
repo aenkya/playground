@@ -45,7 +45,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#checklist">Checklist</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -129,12 +129,100 @@ _For more examples and explorations, please refer to the [Documentation](docs)_
 
 
 
-<!-- ROADMAP -->
-## Roadmap
+<!-- Checklsit -->
+## Checklist
 
-- [x] Add Changelog
-- [x] Add back to top links
+- [x] Snakes & ladders
+- [ ] Chess
+- [x] Python practice
+- [x] Go practice
+- [x] Data Structures
+  - [x] Binary Tree
+  - [x] Ordered Set
+  - [x] Queue
+  - [x] Singly Linked List
+  - [ ] Doubly Linked List
+  - [ ] Trie
+  - [ ] Graph
+  - [x] Stack
+- [x] Design Patterns
+  - [x] Builder
+  - [ ] Factory
+    - [ ] Interface factory
+    - [ ] Factory generator
+    - [ ] Prototype factory
+  - [ ] Prototype
+  - [ ] Singleton
+  - [ ] Adapter
+  - [ ] Bridge
+  - [ ] Composite
+  - [ ] Aggregator
+    - [ ] Multiple aggregation
+    - [ ] Decorator
+  - [ ] Facade
+  - [ ] Flyweight
+  - [ ] Proxy
+    - [ ] Protection proxy
+    - [ ] virtual proxy
+  - [ ] Chain of Responsibility
+    - [ ] Method chain
+    - [ ] Command Query Separation
+    - [ ] Broker chain
+  - [ ] Command
+    - [ ] Command
+    - [ ] Undo
+    - [ ] Composite
+    - [ ] Functional
+  - [ ] Interpreter
+    - [ ] Lexing
+    - [ ] Parsing
+  - [ ] Iterator
+  - [ ] Mediator
+  - [ ] Memento
+  - [ ] Observer
+  - [ ] State
+    - [ ] Hand-made state machine
+    - [ ] Switch-made state machine
+  - [ ] Strategy
+  - [ ] Template
+    - [ ] Functional template
+  - [ ] Visitor
+    - [ ] Intrusive visitor
+    - [ ] Reflective visitor
+    - [ ] Classic visitor
+- [x] SOLID Principles
+  - [x] Single Responsibility
+  - [x] Open Closed
+  - [ ] Liskov Substitution
+  - [ ] Interface Segregation
+  - [ ] Dependency Inversion
 - [x] Update README
+- [x] OOP
+- [x] Algorithms
+  - [ ] Sorting
+    - [x] Merge Sort
+    - [ ] Bubble Sort
+    - [ ] Insertion Sort
+    - [ ] Quick Sort
+    - [ ] Heap Sort
+    - [ ] Radix Sort
+    - [ ] Heap Sort
+    - [ ] Tim Sort
+  - [x] Binary Search
+  - [x] isValidPalindrome
+  - [x] Longest Substring
+  - [x] Median of 2 Sorted Arrays
+  - [x] N Queens
+  - [x] Repeated Words
+  - [x] Spiral Matrix
+  - [x] Threesum
+  - [x] Twosum
+- [x] Problem Solving Approaches
+  - [x] Backtracking
+  - [x] Divide and Conquer
+  - [x] Dynamic Programming
+  - [x] 2 Pointers
+  - [x] Brute force
 - [x] Dockerize application
 - [ ] Expose APIs to access functionality
 - [ ] Add networking features
