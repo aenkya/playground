@@ -5,6 +5,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOLINT=golangci-lint run
 BIN_DIR=bin
+PECAN=python ./pie/pecan/manage.py
 
 # Binary name
 BINARY_NAME=playgrnd
@@ -74,7 +75,15 @@ docker-all: docker-build docker-run
 
 .setup-python-virtualenv:
 	python3 -m venv /pie/.venv
-	source /pie/.venv/bin/activate
+
+.activate-python-virtualenv:
+	source ./pie/.venv/bin/activate
+
+run-pie:
+	python -m pie
+
+run-pecan-pie:
+	$(PECAN) runserver
 
 .setup-python-dependencies:
 	pip install -r pie/requirements.txt
