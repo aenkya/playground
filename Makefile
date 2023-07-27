@@ -73,7 +73,7 @@ docker-all: docker-build docker-run
 	go install github.com/cosmtrek/air@latest
 
 .setup-python-virtualenv:
-	python -m venv /pie/.venv
+	python3 -m venv /pie/.venv
 	source /pie/.venv/bin/activate
 
 .setup-python-dependencies:
