@@ -1,0 +1,12 @@
+{% extends 'todos/base.html' %}
+{% block content %}
+    <h1>Sign Up</h1>
+    <form action="{{ url('signup') }}" method="post">
+        <label for="username">Username</label>
+        <input type="text" name="username" id="username" />
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" />
+        <input type="submit" value="Sign Up" />
+    </form>
+{% endblock %}
+```

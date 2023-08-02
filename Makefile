@@ -85,6 +85,15 @@ run-pie:
 run-pecan-pie:
 	$(PECAN) runserver
 
+run-pecan-pie-migrate:
+	$(PECAN) migrate
+
+run-pecan-pie-makemigrations:
+	$(PECAN) makemigrations
+
+add-pie-app:
+	$(PECAN) startapp $(app_name)
+
 .setup-python-dependencies:
 	pip install -r pie/requirements.txt
 
