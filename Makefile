@@ -72,6 +72,8 @@ docker-all: docker-build docker-run
 .setup-live-reload:
 	go get github.com/cosmtrek/air@latest
 	go install github.com/cosmtrek/air@latest
+dev:
+	air
 
 .setup-python-virtualenv:
 	python3 -m venv /pie/.venv
