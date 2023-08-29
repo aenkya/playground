@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+//nolint:govet // ignore struct optimisation
 func TestCreation(t *testing.T) {
 	tests := []struct {
 		name     string

@@ -7,8 +7,8 @@ type Address struct {
 }
 
 type Person struct {
-	Name    string
 	Address *Address
+	Name    string
 }
 
 type Pair[K comparable, V any] struct {
@@ -16,8 +16,8 @@ type Pair[K comparable, V any] struct {
 	value V
 }
 
+// uses variadic function to allow for multiple fields to be changed
 func Creational(p Person, newData ...Pair[string, string]) Person {
-
 	p2 := p
 
 	for _, d := range newData {

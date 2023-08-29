@@ -9,13 +9,11 @@ import (
 	"time"
 
 	"enkya.org/playground/practice"
-	_ "enkya.org/playground/practice"
 )
 
 func main() {
 	practice.StartPractice()
-	// goByExample()
-	// proto()
+	goByExample()
 }
 
 func goByExample() {
@@ -36,51 +34,11 @@ func goByExample() {
 	testGoroutines()
 }
 
-func variadic(nums ...int) {
-	for _, num := range nums {
-		fmt.Println(num)
-	}
-}
-
-func pointers() {
-	x := 7
-	y := &x
-	z := x
-	fmt.Println(x, *y)
-	*y = 8
-	fmt.Println(x, *y)
-	fmt.Println(z)
-}
-
-func testDefer() {
-	for i := 0; i < 5; i++ {
-		defer fmt.Println(i)
-	}
-}
-
-func testGenerics() {
-	m := map[int]string{1: "one", 2: "two", 3: "three"}
-	// fmt.Println(getKeysNotNum(m, 2))
-	fmt.Println(getKeysNotNum[int, string](m, 2))
-}
-
-func getKeysNotNum[K comparable, V any](m map[K]V, n K) []K {
-	keys := make([]K, 0, len(m))
-
-	for k := range m {
-		if k == n {
-			continue
-		}
-		keys = append(keys, k)
-	}
-
-	return keys
-}
-
 func testGoroutines() {
 	var wg sync.WaitGroup
 
 	wg.Add(1)
+
 	go func(going string) {
 		fmt.Printf("hello %s\n", going)
 		wg.Done()
