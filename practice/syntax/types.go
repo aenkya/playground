@@ -7,7 +7,7 @@ import (
 
 type myType int
 
-func Types() {
+func types() {
 	var x myType = 8
 
 	fmt.Println(runtime.NumCPU())
@@ -28,5 +28,16 @@ func Types() {
 
 	for _, rune := range sample {
 		fmt.Printf("% d\n", rune)
+	}
+}
+
+func checkTypes(i any) string {
+	switch i.(type) {
+	case int:
+		return "int"
+	case string:
+		return "string"
+	default:
+		return "unknown"
 	}
 }
