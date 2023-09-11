@@ -7,7 +7,6 @@ import (
 )
 
 func largestTimeFromDigits(arr []int) string {
-	// sort.Ints(arr)
 	lh := -1
 	curr := -1
 	second := -1
@@ -31,8 +30,10 @@ func largestTimeFromDigits(arr []int) string {
 		if i == curr {
 			continue
 		}
+
 		num, _ := strconv.ParseFloat(fmt.Sprintf("%d%d", lh, v), 64)
 		diff := math.Abs(24.0 - num)
+
 		if diff < math.Abs(24.0-lhh) {
 			lhh = num
 			second = i
@@ -40,10 +41,12 @@ func largestTimeFromDigits(arr []int) string {
 	}
 
 	minDigit1, minDigit2 := -1, -1
+
 	for i, v := range arr {
 		if i == second || i == curr {
 			continue
 		}
+
 		if minDigit1 < 0 {
 			minDigit1 = v
 		} else if minDigit2 < 0 {
@@ -63,5 +66,4 @@ func largestTimeFromDigits(arr []int) string {
 	}
 
 	return fmt.Sprintf("%f:%f", lhh, lmh)
-
 }
