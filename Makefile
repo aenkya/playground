@@ -5,6 +5,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOLINT=golangci-lint run
 BIN_DIR=bin
+PECAN=python ./pie/pecan/manage.py
 
 # Binary name
 BINARY_NAME=playgrnd
@@ -71,10 +72,29 @@ docker-all: docker-build docker-run
 .setup-live-reload:
 	go get github.com/cosmtrek/air@latest
 	go install github.com/cosmtrek/air@latest
+dev:
+	air
 
 .setup-python-virtualenv:
-	python -m venv /pie/.venv
-	source /pie/.venv/bin/activate
+	python3 -m venv /pie/.venv
+
+.activate-python-virtualenv:
+	source ./pie/.venv/bin/activate
+
+run-pie:
+	python -m pie
+
+run-pecan-pie:
+	$(PECAN) runserver
+
+run-pecan-pie-migrate:
+	$(PECAN) migrate
+
+run-pecan-pie-makemigrations:
+	$(PECAN) makemigrations
+
+add-pie-app:
+	$(PECAN) startapp $(app_name)
 
 .setup-python-dependencies:
 	pip install -r pie/requirements.txt

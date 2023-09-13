@@ -10,3 +10,5 @@ type Algo interface {
 	RunAlgo()
 	Describe()
 }
+
+type DesignPatterns any

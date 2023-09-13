@@ -1,18 +1,15 @@
 //go:build !codeanalysis
 // +build !codeanalysis
 
-package golang
+package syntax
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
-	"runtime"
-	"strings"
 	"sync"
 	"time"
 
@@ -22,95 +19,11 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type myType int
-
-type MyReader struct{}
-
-func (r *MyReader) Read(p []byte) (int, error) {
-	// Fill the byte slice with 'A' until it is full
-	for i := 0; ; i++ {
-		p[i%len(p)] = 'A'
-		return len(p), nil
-	}
-}
-
-type rot13Reader struct {
-	r io.Reader
-}
-
-func (r *rot13Reader) Read(p []byte) (int, error) {
-	n, err := r.r.Read(p)
-	for k, v := range p[:n] {
-		p[k] = rot13(v)
-	}
-
-	return n, err
-}
-
-//nolint:gocritic // the if statement makes more sense here
-func rot13(c byte) byte {
-	const rot = 13
-	if c >= 'a' && c <= 'z' {
-		if c+rot <= 'z' {
-			return c + rot
-		}
-
-		return c - rot
-	} else if c >= 'A' && c <= 'Z' {
-		if c+rot <= 'Z' {
-			return c + rot
-		}
-
-		return c - rot
-	} else {
-		return c
-	}
-}
-
-func GoPractice() {
-	i := 8
-
-	var x myType = 8
-	if i%2 == 0 {
-		fmt.Printf("Even: %T\n", x)
-	} else {
-		fmt.Println("Odd")
-	}
-
-	go func() {
-		time.Sleep(100 * time.Millisecond)
-		fmt.Println("Hello from another goroutine")
-	}()
-
-	fmt.Println(runtime.NumCPU())
-
-	arr := [...]int{3, 5, 2}
-	y := arr[0]
-	fmt.Println(x, len(arr), y)
-
-	const sample = "\xbd\xb2\x3d\xbc\x20\xe2\x8c\x98"
-
-	fmt.Println(sample)
-
-	for i := 0; i < len(sample); i++ {
-		fmt.Printf("%x", sample[i]) // hexa decimal representation
-	}
-
-	fmt.Println()
-
-	for _, rune := range sample {
-		fmt.Printf("% d\n", rune)
-	}
-
-	s := strings.NewReader("Lbh penpxrq gur pbqr!")
-	r := rot13Reader{s}
-
-	if _, err := io.Copy(os.Stdout, &r); err != nil {
-		fmt.Print(err)
-	}
-
-	if err := godotenv.Load(); err != nil {
+func MongoDriverPractice() {
+	if err := godotenv.Load("../../.env"); err != nil {
 		log.Println("No .env file found")
+	} else {
+		log.Println("Environment variables loaded successfully")
 	}
 
 	uri := os.Getenv("MONGODB_URI")
@@ -230,43 +143,12 @@ func GoPractice() {
 	http.HandleFunc("/movies", GetMovies)
 	fmt.Println("Server started")
 
-	pings := make(chan string)
-	pongs := make(chan string)
-
-	go pinger(pings)
-	go ponger(pings, pongs)
-	go printer(pongs)
-
 	server := &http.Server{
 		Addr:              ":8080",
 		ReadHeaderTimeout: 3 * time.Second,
 	}
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Print(err)
-	}
-}
-
-func pinger(pings chan<- string) {
-	for i := 0; i < 5; i++ {
-		pings <- "ping"
-	}
-}
-
-func ponger(pings <-chan string, pongs chan<- string) {
-	for {
-		select {
-		case msg := <-pings:
-			pongs <- msg
-		default:
-			pongs <- "pong"
-		}
-	}
-}
-
-func printer(pongs <-chan string) {
-	for {
-		pong := <-pongs
-		fmt.Println(pong)
 	}
 }
 

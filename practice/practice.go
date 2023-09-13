@@ -3,7 +3,9 @@
 
 package practice
 
-import "enkya.org/playground/practice/io"
+import (
+	"enkya.org/playground/practice/io"
+)
 
 type Type struct {
 	algorithms    map[string]io.Algo
