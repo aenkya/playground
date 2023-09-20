@@ -1,136 +1,46 @@
 package algo
 
 import (
-	"fmt"
-	"math"
+	ds "enkya.org/playground/practice/datastructures"
+	"enkya.org/playground/utils"
 )
 
-func longestSubarrayA1(nums []int, limit int) int {
-	maxS := 0
-	minS := 0
-	s := make([]int, 0, len(nums))
+func longestSubarray(nums []int, limit int) int {
+	mins, max := ds.NewQueue(), ds.NewQueue()
 
-	for i, v := range nums {
+	var ans int
+	l, r := 0, 0
 
-		if i < len(nums)-1 && v == nums[i+1] {
-			s = append(s, v)
-			continue
+	for r < len(nums) {
+
+		cur := nums[r]
+
+		for !mins.IsEmpty() && cur < mins.Peek().(int) {
+			mins.Dequeue()
 		}
 
-		if v >= maxS {
-			if checkIfADLessThanLimit(minS, v, limit) {
-				s = append(s, v)
-			}
-			maxS = v
-		} else if v <= minS {
-			if checkIfADLessThanLimit(v, maxS, limit) {
-				s = append(s, v)
-			}
-			minS = v
-		} else {
-			if checkIfADLessThanLimit(minS, v, limit) && checkIfADLessThanLimit(v, maxS, limit) {
-				s = append(s, v)
-			}
-		}
-	}
-
-	fmt.Println(s)
-	return len(s)
-}
-
-func checkIfADLessThanLimit(min, max, limit int) bool {
-	return math.Abs(float64(max-min)) <= float64(limit)
-}
-
-/*
-
-Function: longestsubarray
-Input: nums []int, limit int
-Output: len(s) int
-
-BEGIN
-    sort(nums) // o(nlogn)
-    s <- []
-    DECLARE maxS <- 0
-    DECLARE minS <- 0
-
-    loop through nums with i: // + O(n)
-        currVal <- nums[i]
-        if currVal == nums[i+1]:
-            s <- append(s, currVal)
-            continue
-        MAX = MAX(MAXS, CURRVAL)
-        MIN = MIN(MINS, CURRVAL)
-        IF checkIfADLessThanLimit(MIN, MAX, limit)
-            S <- APPEND(S, CURRVAL)
-
-    RETURN len(s)
-
-    // IF SORTED
-    L := 0, R := LEN(NUMS)-1
-    WHILE L<R && currDIF > :
-
-
-END
-
-FUNCTION checkIfADLessThanLimit(min, max, limit)
-    DECLARE AD <- math.Abs(max-min)
-
-    IF AD <= limit:
-        RETURN true
-    RETURN FALSE
-END FUNCTION
-
-
-*/
-
-func longestSubarrayA2(nums []int, limit int) int {
-	maxL := 0
-	for i := 0; i < len(nums); i++ {
-		l := 1
-		for j := i + 1; j < len(nums); j++ {
-			if math.Abs(float64(nums[i]-nums[j])) < float64(limit) {
-				l++
-			}
+		for !max.IsEmpty() && cur > max.Peek().(int) {
+			max.Dequeue()
 		}
 
-		if l > maxL {
-			maxL = l
-		}
-	}
+		mins.Enqueue(cur)
+		max.Enqueue(cur)
 
-	return maxL
-}
-
-func longestSubarrayA3(nums []int, limit int) int {
-	maxL := 0
-	for i := 0; i < len(nums); i++ {
-		l := 1
-		max := nums[i]
-		min := nums[i]
-
-		for j := i + 1; j < len(nums); j++ {
-			if nums[j] > max {
-				max = nums[j]
-			}
-			if nums[j] < min {
-				min = nums[j]
+		for !mins.IsEmpty() && !max.IsEmpty() && max.Peek().(int)-mins.Peek().(int) > limit {
+			if nums[l] == mins.Peek().(int) {
+				mins.Dequeue()
 			}
 
-			diff := float64(max - min)
-
-			if math.Abs(diff) > float64(limit) {
-				break
+			if nums[l] == max.Peek().(int) {
+				max.Dequeue()
 			}
 
 			l++
-
 		}
 
-		if l > maxL {
-			maxL = l
-		}
+		ans = utils.MaxInt(ans, r-l+1)
+		r++
 	}
 
-	return maxL
+	return ans
 }

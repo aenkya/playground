@@ -37,7 +37,7 @@ func TestLongestContiguousSubArrayWithADLTLimit(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			got := longestSubarrayA1(test.input, test.limit)
+			got := longestSubarray(test.input, test.limit)
 			if got != test.want {
 				t.Errorf("got %d, want %d", got, test.want)
 			}
