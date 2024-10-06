@@ -1,16 +1,21 @@
 package algo
 
 func findDuplicates(nums []int) map[int]int {
-	occurrences := make(map[int]int)
+	return findDups(nums)
+}
+
+func findDups(nums []int) map[int]int {
+	occur := make(map[int]int)
 
 	for _, v := range nums {
-		occurrences[v] += 1
+		occur[v] += 1
 	}
 
-	for k, v := range occurrences {
+	for k, v := range occur {
 		if v == 1 {
-			delete(occurrences, k)
+			delete(occur, k)
 		}
 	}
-	return occurrences
+
+	return occur
 }
