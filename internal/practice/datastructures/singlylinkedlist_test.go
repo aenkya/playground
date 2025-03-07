@@ -3,7 +3,7 @@ package datastructures
 import (
 	"testing"
 
-	"enkya.org/playground/utils"
+	"enkya.org/playground/internal/utils"
 )
 
 func TestSinglyLinkedList(t *testing.T) {

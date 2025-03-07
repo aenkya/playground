@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	pio "enkya.org/playground/practice/io"
+	pio "enkya.org/playground/internal/practice/io"
 )
 
 //nolint:govet // ignore struct field order

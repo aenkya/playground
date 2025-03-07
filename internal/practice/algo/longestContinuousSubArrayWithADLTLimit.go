@@ -1,8 +1,8 @@
 package algo
 
 import (
-	ds "enkya.org/playground/practice/datastructures"
-	"enkya.org/playground/utils"
+	ds "enkya.org/playground/internal/practice/datastructures"
+	"enkya.org/playground/internal/utils"
 )
 
 func longestSubarray(nums []int, limit int) int {
