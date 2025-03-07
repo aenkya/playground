@@ -4,7 +4,7 @@
 package main
 
 import (
-	"enkya.org/playground/playground"
+	"enkya.org/playground/internal/playground"
 )
 
 func main() {
