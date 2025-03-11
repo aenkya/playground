@@ -22,3 +22,11 @@ func Contains[T comparable](m map[T]bool, val T) bool {
 
 	return false
 }
+
+func MaxInt(i, j int) int {
+	if i > j {
+		return i
+	}
+
+	return j
+}

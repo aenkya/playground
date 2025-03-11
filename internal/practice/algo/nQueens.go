@@ -6,9 +6,9 @@ import (
 	"runtime"
 	"strings"
 
-	ds "enkya.org/playground/practice/datastructures"
-	pio "enkya.org/playground/practice/io"
-	"enkya.org/playground/utils"
+	ds "enkya.org/playground/internal/practice/datastructures"
+	pio "enkya.org/playground/internal/practice/io"
+	"enkya.org/playground/internal/utils"
 )
 
 type NQueens struct {

@@ -3,7 +3,8 @@ package algo
 import (
 	"fmt"
 
-	"enkya.org/playground/practice/io"
+	"enkya.org/playground/internal/practice/io"
+	"enkya.org/playground/internal/utils"
 )
 
 type LongestSubstring struct {
@@ -48,12 +49,12 @@ func (ls *LongestSubstring) LengthOfLongestSubstringV1(s string) int {
 
 		for j, v := range s[i:] {
 			if _, found := seen[v]; found {
-				longestSubstr = maxInt(longestSubstr, len(s[i:i+j]))
+				longestSubstr = utils.MaxInt(longestSubstr, len(s[i:i+j]))
 				break
 			}
 
 			seen[v] = 1
-			longestSubstr = maxInt(longestSubstr, len(s[i:i+j+1]))
+			longestSubstr = utils.MaxInt(longestSubstr, len(s[i:i+j+1]))
 		}
 	}
 
@@ -77,18 +78,10 @@ func (ls *LongestSubstring) LengthOfLongestSubstringV2(s string) int {
 			length++
 		}
 
-		result = maxInt(result, length)
+		result = utils.MaxInt(result, length)
 	}
 
 	return result
-}
-
-func maxInt(i, j int) int {
-	if i > j {
-		return i
-	}
-
-	return j
 }
 
 func NewLongestSubstring() *LongestSubstring {

@@ -3,9 +3,9 @@ package practice
 import (
 	"fmt"
 
-	"enkya.org/playground/practice/algo"
-	"enkya.org/playground/practice/io"
-	"enkya.org/playground/practice/sort"
+	"enkya.org/playground/internal/practice/algo"
+	"enkya.org/playground/internal/practice/io"
+	"enkya.org/playground/internal/practice/sort"
 )
 
 func NewAlgoPractice() Type {

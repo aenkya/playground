@@ -4,7 +4,7 @@
 package practice
 
 import (
-	"enkya.org/playground/practice/io"
+	"enkya.org/playground/internal/practice/io"
 )
 
 type Type struct {
@@ -21,5 +21,5 @@ func StartPractice() {
 	}
 
 	a.LoadTestData()
-	a.RunAlgo()
+	// a.RunAlgo()
 }

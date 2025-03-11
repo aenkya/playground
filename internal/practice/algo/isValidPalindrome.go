@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode"
 
-	"enkya.org/playground/practice/io"
+	"enkya.org/playground/internal/practice/io"
 )
 
 type IsValidPalindrome struct {

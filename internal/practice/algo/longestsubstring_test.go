@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"enkya.org/playground/utils"
+	"enkya.org/playground/internal/utils"
 )
 
 func TestLongestSubstringV1(t *testing.T) {

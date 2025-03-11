@@ -7,8 +7,8 @@ import (
 	"sort"
 	"strings"
 
-	"enkya.org/playground/practice/io"
-	"enkya.org/playground/utils"
+	"enkya.org/playground/internal/practice/io"
+	"enkya.org/playground/internal/utils"
 )
 
 type ThreeSum struct {

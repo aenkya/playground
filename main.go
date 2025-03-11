@@ -3,8 +3,11 @@
 
 package main
 
-import "enkya.org/playground/practice"
+import (
+	"enkya.org/playground/internal/playground"
+)
 
 func main() {
-	practice.StartPractice()
+	// practice.StartPractice()
+	playground.NewGame().Start()
 }

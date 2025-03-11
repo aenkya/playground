@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"strings"
 
-	"enkya.org/playground/practice/io"
+	"enkya.org/playground/internal/practice/io"
 )
 
 type RepeatedWords struct {
