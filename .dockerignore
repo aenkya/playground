@@ -1,0 +1,7 @@
+.git
+.gitignore
+.env
+tmp/
+client/node_modules
+client/.next
+**/.DS_Store

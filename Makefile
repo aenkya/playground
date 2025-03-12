@@ -8,7 +8,7 @@ BIN_DIR=bin
 PECAN=python ./pie/pecan/manage.py
 
 # Binary name
-BINARY_NAME=playgrnd
+BINARY_NAME=playground
 
 # Docker parameters
 DOCKER_BUILD_CMD=docker build
