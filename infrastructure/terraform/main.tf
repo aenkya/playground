@@ -18,6 +18,7 @@ resource "digitalocean_droplet" "app_server" {
   region   = var.region
   ssh_keys = [data.digitalocean_ssh_key.default.id]
   tags     = ["app", var.environment]
+  monitoring = var.monitoring
 
   vpc_uuid = digitalocean_vpc.app_network.id
 
