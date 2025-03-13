@@ -1,0 +1,28 @@
+---
+- name: Create app directory
+  file:
+    path: /opt/playground
+    state: directory
+    mode: '0755'
+
+- name: Copy application files
+  copy:
+    src: "{{ item }}"
+    dest: /opt/playground/
+  with_items:
+    - docker-compose.yml
+    - .env
+    - docker
+    - client
+    - go.mod
+    - go.sum
+    - main.go
+    - internal
+
+- name: Build and start application
+  docker_compose:
+    project_src: /opt/playground
+    files:
+      - docker-compose.yml
+    build: yes
+    state: present

@@ -1,0 +1,69 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  TF_WORKSPACE: production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.7.0"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Ansible
+        run: |
+          python -m pip install --upgrade pip
+          pip install ansible
+
+      - name: Configure SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $(terraform output -raw droplet_ip) >> ~/.ssh/known_hosts
+
+      - name: Terraform Init
+        run: |
+          cd infrastructure/terraform
+          terraform init
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Terraform Plan
+        run: |
+          cd infrastructure/terraform
+          terraform plan
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
+          TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
+
+      - name: Terraform Apply
+        run: |
+          cd infrastructure/terraform
+          terraform apply -auto-approve
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
+          TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
+
+      - name: Run Ansible Playbook
+        run: |
+          cd infrastructure/ansible
+          ansible-playbook -i inventory.yml site.yml
