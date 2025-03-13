@@ -11,8 +11,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - GO_ENV=production
-      - DATABASE_URL=${DATABASE_URL}
+      - GO_ENV=development
     command: air -c .air.toml
 
   frontend:
@@ -26,9 +25,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
-      - API_URL=${API_URL}
-    command: npm run build && npm start
+      - NODE_ENV=development
+    command: npm run dev
 
 volumes:
   go-mod-cache:

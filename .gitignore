@@ -55,3 +55,12 @@ build/
 **/.venv/*
 .vscode/*
 .vscode/settings.json
+
+# Add infrastructure
+infrastructure/terraform/terraform.tfstate
+infrastructure/terraform/terraform.tfstate.backup
+infrastructure/terraform/terraform.lock.hcl
+infrastructure/terraform/.terraform
+infrastructure/terraform/.terraform.lock.hcl
+infrastructure/terraform/.terraform/modules
+infrastructure/terraform/.terraform.*
