@@ -56,7 +56,7 @@ jobs:
       - name: Terraform Apply
         run: |
           cd infrastructure/terraform
-          terraform apply -auto-approve
+          terraform apply -auto-approve -target=digitalocean_droplet.app_server -target=digitalocean_firewall.app_firewall
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}

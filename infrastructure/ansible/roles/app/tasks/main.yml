@@ -10,19 +10,22 @@
     src: "{{ item }}"
     dest: /opt/playground/
   with_items:
-    - docker-compose.yml
-    - .env
-    - docker
-    - client
-    - go.mod
-    - go.sum
-    - main.go
-    - internal
+    - ../../docker-compose.yml
+    - ../../.env
+    - ../../docker
+    - ../../client
+    - ../../go.mod
+    - ../../go.sum
+    - ../../main.go
+    - ../../internal
+    - ../../cmd
 
 - name: Build and start application
-  docker_compose:
+  community.docker.docker_compose_v2:
     project_src: /opt/playground
     files:
       - docker-compose.yml
-    build: yes
+    build: always
     state: present
+    recreate: always
+    remove_orphans: true

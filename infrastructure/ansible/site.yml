@@ -1,7 +1,26 @@
 ---
+# Configure load balancer
+- name: Configure load balancer
+  hosts: loadbalancer
+  become: true
+  tags: loadbalancer
+  vars:
+    domain: "enkya.org"
+    subdomain: "playground"
+    certbot_email: "info@enkya.org"
+  roles:
+    - common
+    - loadbalancer
+
+# Configure app server
 - name: Configure app server
   hosts: app
   become: true
+  tags: app
+  vars:
+    domain: "enkya.org"
+    subdomain: "playground"
+    certbot_email: "info@enkya.org"
   roles:
     - common
     - app

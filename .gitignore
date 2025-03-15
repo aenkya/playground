@@ -64,3 +64,10 @@ infrastructure/terraform/.terraform
 infrastructure/terraform/.terraform.lock.hcl
 infrastructure/terraform/.terraform/modules
 infrastructure/terraform/.terraform.*
+infrastructure/ansible/inventory.yml
+
+
+# client
+client/node_modules
+client/.next
+client/.next/cache

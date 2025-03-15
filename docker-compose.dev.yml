@@ -4,7 +4,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: docker/backend.Dockerfile
+      dockerfile: docker/backend.dev.Dockerfile
     volumes:
       - .:/app
       - go-mod-cache:/go/pkg/mod
@@ -17,7 +17,7 @@ services:
   frontend:
     build:
       context: ./client
-      dockerfile: ../docker/frontend.Dockerfile
+      dockerfile: ../docker/frontend.dev.Dockerfile
     volumes:
       - ./client:/app
       - /app/node_modules

@@ -22,6 +22,12 @@ variable "droplet_size" {
   default     = "s-1vcpu-1gb"
 }
 
+variable "lb_droplet_size" {
+  description = "Load balancer droplet size"
+  type        = string
+  default     = "s-1vcpu-1gb"
+}
+
 variable "droplet_image" {
   description = "Droplet base image"
   type        = string
@@ -31,7 +37,7 @@ variable "droplet_image" {
 variable "vpc_cidr" {
   description = "VPC CIDR range"
   type        = string
-  default     = "10.10.10.0/24"
+  default     = "10.20.0.0/24"
 }
 
 variable "ssh_key_name" {
@@ -40,12 +46,25 @@ variable "ssh_key_name" {
 }
 
 variable "ssh_private_key_path" {
-  description = "Path to SSH private key"
+  description = "Path to SSH private key file"
   type        = string
+  default     = "~/.ssh/id_rsa"
 }
 
 variable "monitoring" {
   description = "Enable monitoring"
   type        = bool
   default     = false
+}
+
+variable "domain_name" {
+  description = "Domain name for the application"
+  type        = string
+  default     = "enkya.org"
+}
+
+variable "subdomain" {
+  description = "Subdomain for the application (leave empty for root domain)"
+  type        = string
+  default     = "playground"
 }

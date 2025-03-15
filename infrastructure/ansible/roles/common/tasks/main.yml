@@ -16,10 +16,25 @@
     state: present
 
 - name: Install Docker Compose
+  block:
+    - name: Create Docker CLI plugins directory
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+        mode: '0755'
+
+- name: Download Docker Compose
   get_url:
-    url: https://github.com/docker/compose/releases/latest/download/docker-compose-Linux-x86_64
-    dest: /usr/local/bin/docker-compose
+    url: https://github.com/docker/compose/releases/download/v2.24.5/docker-compose-linux-x86_64
+    dest: /usr/local/lib/docker/cli-plugins/docker-compose
     mode: '0755'
+    owner: root
+    group: root
+
+- name: Verify Docker Compose installation
+  command: docker compose version
+  register: compose_version
+  changed_when: false
 
 - name: Add current user to docker group
   user:

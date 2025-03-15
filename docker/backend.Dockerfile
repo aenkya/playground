@@ -1,14 +1,14 @@
-FROM golang:1.23-alpine
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
-
-RUN go install github.com/air-verse/air@latest
-
-COPY go.mod go.sum ./
-RUN go mod download
-
 COPY . .
+RUN go mod download
+RUN go build -o playground main.go
+
+FROM alpine:latest
+WORKDIR /root/
+COPY --from=builder /app/playground .
 
 EXPOSE 8080
 
-CMD ["air", "-c", ".air.toml"]
+CMD ["./playground"]

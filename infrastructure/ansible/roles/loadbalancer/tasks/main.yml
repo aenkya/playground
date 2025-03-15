@@ -1,0 +1,32 @@
+---
+- name: Install Nginx and Certbot
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+      - nginx
+    state: present
+    update_cache: yes
+
+- name: Configure Nginx as a load balancer
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/sites-available/{{ domain_name }}
+  vars:
+    domain_name: "{{ subdomain }}.{{ domain }}"
+    app_server_ip: "{{ hostvars[groups['app'][0]]['ansible_host'] }}"
+    backend_port: 8080
+    frontend_port: 3000
+
+- name: Enable Nginx site
+  file:
+    src: /etc/nginx/sites-available/{{ domain_name }}
+    dest: /etc/nginx/sites-enabled/{{ domain_name }}
+    state: link
+  vars:
+    domain_name: "{{ subdomain }}.{{ domain }}"
+
+- name: Remove default Nginx site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
