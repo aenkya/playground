@@ -53,17 +53,38 @@ jobs:
           TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
           TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
 
-      - name: Terraform Apply
+      - name: Terraform Apply Core Infrastructure
         run: |
           cd infrastructure/terraform
-          terraform apply -auto-approve -target=digitalocean_droplet.app_server -target=digitalocean_firewall.app_firewall
+          terraform apply -auto-approve \
+            -target=digitalocean_droplet.app_server \
+            -target=digitalocean_firewall.app_firewall
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
           TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
 
-      - name: Run Ansible Playbook
+      - name: Terraform Apply Load Balancer
+        if: contains(github.event.head_commit.message, '[deploy-lb]')
+        run: |
+          cd infrastructure/terraform
+          terraform apply -auto-approve \
+            -target=digitalocean_droplet.load_balancer
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
+          TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
+
+      - name: Run Ansible Playbook for Load Balancer only
+        if: contains(github.event.head_commit.message, '[deploy-lb]')
         run: |
           cd infrastructure/ansible
-          ansible-playbook -i inventory.yml site.yml
+          ansible-playbook -i inventory.yml site.yml --tags loadbalancer
+
+      - name: Run Full Ansible Playbook
+        if: ${{ !contains(github.event.head_commit.message, '[deploy-lb]') }}
+        run: |
+          cd infrastructure/ansible
+          ansible-playbook -i inventory.yml site.yml --skip-tags loadbalancer
