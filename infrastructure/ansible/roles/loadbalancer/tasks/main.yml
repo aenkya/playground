@@ -8,6 +8,12 @@
     state: present
     update_cache: yes
 
+- name: Create SSL directory
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    mode: '0755'
+
 - name: Configure Nginx as a load balancer
   template:
     src: nginx.conf.j2
@@ -30,3 +36,47 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
+
+- name: Ensure Nginx is started
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Stop Nginx temporarily for cert obtainment
+  service:
+    name: nginx
+    state: stopped
+
+- name: Obtain SSL certificate
+  command: >
+    certbot certonly --standalone
+    -d {{ subdomain }}.{{ domain }}
+    --email {{ certbot_email }}
+    --agree-tos
+    --non-interactive
+    --keep-until-expiring
+  register: certbot_result
+  vars:
+    domain_name: "{{ subdomain }}.{{ domain }}"
+
+- name: Create symbolic links for certificates
+  file:
+    src: "/etc/letsencrypt/live/{{ subdomain }}.{{ domain }}/{{ item.src }}"
+    dest: "/etc/nginx/ssl/{{ item.dest }}"
+    state: link
+    force: yes
+  loop:
+    - { src: 'fullchain.pem', dest: 'cert.pem' }
+    - { src: 'privkey.pem', dest: 'key.pem' }
+
+- name: Start Nginx after cert obtainment
+  service:
+    name: nginx
+    state: started
+
+- name: Add Certbot renewal cron job
+  cron:
+    name: "Certbot Renewal"
+    job: "certbot renew --quiet --no-self-upgrade"
+    special_time: daily

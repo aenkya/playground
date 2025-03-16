@@ -71,3 +71,4 @@ infrastructure/ansible/inventory.yml
 client/node_modules
 client/.next
 client/.next/cache
+secrets.txt
