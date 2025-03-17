@@ -34,7 +34,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $(terraform output -raw droplet_ip) >> ~/.ssh/known_hosts
 
       - name: Terraform Init
         run: |
@@ -65,6 +64,14 @@ jobs:
           TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
           TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
 
+      - name: Update SSH known_hosts
+        run: |
+          cd infrastructure/terraform
+          APP_IP=$(terraform output -raw droplet_ip)
+          ssh-keyscan -H $APP_IP >> ~/.ssh/known_hosts
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
       - name: Terraform Apply Load Balancer
         if: contains(github.event.head_commit.message, '[deploy-lb]')
         run: |
@@ -76,6 +83,15 @@ jobs:
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
           TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
+
+      - name: Update LB SSH known_hosts
+        if: contains(github.event.head_commit.message, '[deploy-lb]')
+        run: |
+          cd infrastructure/terraform
+          LB_IP=$(terraform output -raw load_balancer_ip)
+          ssh-keyscan -H $LB_IP >> ~/.ssh/known_hosts
+        env:
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
       - name: Run Ansible Playbook for Load Balancer only
         if: contains(github.event.head_commit.message, '[deploy-lb]')
