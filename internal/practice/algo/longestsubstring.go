@@ -26,7 +26,8 @@ func (ls *LongestSubstring) Describe() {
 func (ls *LongestSubstring) RunAlgo() {
 	for _, version := range ls.versions {
 		for _, test := range ls.testData {
-			version(test.Input.(string))
+			s, _ := test.Input.(string)
+			_ = version(s)
 		}
 	}
 }

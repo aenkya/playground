@@ -29,7 +29,7 @@ func (s *SnakesAndLaddersGame) runGameEngine() {
 	for {
 		for _, player := range s.players {
 			fmt.Printf("\n%s's turn. Press enter to roll the dice.", player.name)
-			fmt.Scanln()
+			_, _ = fmt.Scanln()
 
 			dice := player.RollDice()
 			fmt.Printf("\n%s rolled a %d", player.name, dice)
@@ -61,12 +61,12 @@ func (s *SnakesAndLaddersGame) getGameDetails() {
 		name := ""
 
 		fmt.Printf("\nEnter name of player %d: ", i+1)
-		fmt.Scan(&name)
+		_, _ = fmt.Scan(&name)
 
 		token := ""
 
 		fmt.Printf("\nEnter token of player %d: ", i+1)
-		fmt.Scan(&token)
+		_, _ = fmt.Scan(&token)
 		s.players = append(s.players, &Player{name: name, token: token})
 	}
 }

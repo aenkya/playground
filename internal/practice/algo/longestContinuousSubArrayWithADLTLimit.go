@@ -6,33 +6,41 @@ import (
 )
 
 func longestSubarray(nums []int, limit int) int {
-	mins, max := ds.NewQueue(), ds.NewQueue()
+	mins, maxs := ds.NewQueue(), ds.NewQueue()
 
-	var ans int
-	l, r := 0, 0
+	var l, r, ans int
 
 	for r < len(nums) {
-
 		cur := nums[r]
 
-		for !mins.IsEmpty() && cur < mins.Peek().(int) {
+		minsint, ok := mins.Peek().(int)
+		if !ok {
+			continue
+		}
+
+		for !mins.IsEmpty() && cur < minsint {
 			mins.Dequeue()
 		}
 
-		for !max.IsEmpty() && cur > max.Peek().(int) {
-			max.Dequeue()
+		maxint, ok := maxs.Peek().(int)
+		if !ok {
+			continue
+		}
+
+		for !maxs.IsEmpty() && cur > maxint {
+			maxs.Dequeue()
 		}
 
 		mins.Enqueue(cur)
-		max.Enqueue(cur)
+		maxs.Enqueue(cur)
 
-		for !mins.IsEmpty() && !max.IsEmpty() && max.Peek().(int)-mins.Peek().(int) > limit {
-			if nums[l] == mins.Peek().(int) {
+		for !mins.IsEmpty() && !maxs.IsEmpty() && (maxint-minsint) > limit {
+			if nums[l] == minsint {
 				mins.Dequeue()
 			}
 
-			if nums[l] == max.Peek().(int) {
-				max.Dequeue()
+			if nums[l] == maxint {
+				maxs.Dequeue()
 			}
 
 			l++

@@ -24,7 +24,7 @@ func (e *HTMLElement) StringImpl(indent int) string {
 	i := strings.Repeat(" ", indent*2) //nolint:gomnd // indent is 2 spaces
 	sb.WriteString(fmt.Sprintf("%s<%s>", i, e.name))
 
-	if len(e.text) > 0 {
+	if e.text != "" {
 		sb.WriteString(e.text)
 	}
 

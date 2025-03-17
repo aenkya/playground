@@ -11,7 +11,11 @@ func TestStream(t *testing.T) {
 		// Do something
 		<-ready
 		time.Sleep(1 * time.Second)
-		sendFile(1000)
+
+		err := sendFile(1000)
+		if err != nil {
+			t.Error(err)
+		}
 	}()
 
 	server := &FileServer{}
@@ -37,7 +41,7 @@ func TestStream(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.name, func(_ *testing.T) {
 			// Do something
 		})
 	}

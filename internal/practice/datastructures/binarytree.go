@@ -32,7 +32,17 @@ func (t *BinaryTree) Insert(v any) {
 	current := t.Root
 
 	for current != nil {
-		if v.(int) < current.Value.(int) {
+		vint, ok := v.(int)
+		if !ok {
+			return
+		}
+
+		cint, ok := current.Value.(int)
+		if !ok {
+			return
+		}
+
+		if vint < cint {
 			if current.Left == nil {
 				current.Left = &BinaryTreeNode{Value: v}
 
@@ -60,7 +70,10 @@ func (t *BinaryTree) Search(v any) *BinaryTreeNode {
 			return current
 		}
 
-		if v.(int) < current.Value.(int) {
+		vint, _ := v.(int)
+		currvint, _ := current.Value.(int)
+
+		if vint < currvint {
 			current = current.Left
 		} else {
 			current = current.Right
@@ -115,7 +128,8 @@ func (t *BinaryTree) deleteDeepest(node *BinaryTreeNode) {
 	q.Enqueue(t.Root)
 
 	for q.Len() > 0 {
-		if q.Peek().(*BinaryTreeNode) == node {
+		nodeptr, _ := q.Peek().(*BinaryTreeNode)
+		if nodeptr == node {
 			q.Dequeue()
 
 			return

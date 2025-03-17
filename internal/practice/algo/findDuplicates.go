@@ -8,7 +8,7 @@ func findDups(nums []int) map[int]int {
 	occur := make(map[int]int)
 
 	for _, v := range nums {
-		occur[v] += 1
+		occur[v]++
 	}
 
 	for k, v := range occur {
