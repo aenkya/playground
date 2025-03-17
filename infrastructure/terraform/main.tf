@@ -11,8 +11,30 @@ provider "digitalocean" {
   token = var.do_token
 }
 
+# Use a data source to fetch existing VPC if it exists
+data "digitalocean_vpc" "playground_vpc" {
+  name = "playground-network-${var.environment}"
+}
+
+# Create VPC only if it doesn't exist
+resource "digitalocean_vpc" "app_network" {
+  count = data.digitalocean_vpc.playground_vpc.id == "" ? 1 : 0
+  
+  name     = "playground-network-${var.environment}"
+  region   = var.region
+  ip_range = var.vpc_cidr
+}
+
+# Use the VPC ID from either the data source or the resource
+locals {
+  vpc_id = data.digitalocean_vpc.playground_vpc.id != "" ? data.digitalocean_vpc.playground_vpc.id : (length(digitalocean_vpc.app_network) > 0 ? digitalocean_vpc.app_network[0].id : "")
+}
+
 # Load balancer droplet (created once, not part of CI/CD pipeline)
 resource "digitalocean_droplet" "load_balancer" {
+  # Only create if it doesn't exist or if explicitly recreated
+  count    = var.recreate_load_balancer ? 1 : (data.digitalocean_droplet.existing_load_balancer.id == "" ? 1 : 0)
+  
   name       = "playground-lb-${var.environment}"
   size       = var.lb_droplet_size
   image      = var.droplet_image
@@ -20,8 +42,11 @@ resource "digitalocean_droplet" "load_balancer" {
   ssh_keys   = [data.digitalocean_ssh_key.default.id]
   tags       = ["lb", var.environment]
   monitoring = var.monitoring
-  vpc_uuid   = digitalocean_vpc.app_network.id
-
+  vpc_uuid   = local.vpc_id
+  
+  # Ensure VPC is created first if needed
+  depends_on = [digitalocean_vpc.app_network]
+  
   connection {
     type        = "ssh"
     user        = "root"
@@ -36,6 +61,12 @@ resource "digitalocean_droplet" "load_balancer" {
   }
 }
 
+# Use a data source to check if load balancer exists
+data "digitalocean_droplet" "existing_load_balancer" {
+  name = "playground-lb-${var.environment}"
+  # This will fail silently if the droplet doesn't exist
+}
+
 # Application droplet (recreated on each deployment)
 resource "digitalocean_droplet" "app_server" {
   name     = "playground-${var.environment}"
@@ -46,7 +77,10 @@ resource "digitalocean_droplet" "app_server" {
   tags     = ["app", var.environment]
   monitoring = var.monitoring
 
-  vpc_uuid = digitalocean_vpc.app_network.id
+  vpc_uuid = local.vpc_id
+  
+  # Ensure VPC is created first if needed
+  depends_on = [digitalocean_vpc.app_network]
 
   connection {
     type        = "ssh"
@@ -54,12 +88,6 @@ resource "digitalocean_droplet" "app_server" {
     private_key = file(var.ssh_private_key_path)
     host        = self.ipv4_address
   }
-}
-
-resource "digitalocean_vpc" "app_network" {
-  name     = "playground-network-${var.environment}"
-  region   = var.region
-  ip_range = var.vpc_cidr
 }
 
 data "digitalocean_ssh_key" "default" {
@@ -70,7 +98,7 @@ data "digitalocean_ssh_key" "default" {
 resource "digitalocean_firewall" "lb_firewall" {
   name = "playground-lb-firewall-${var.environment}"
 
-  droplet_ids = [digitalocean_droplet.load_balancer.id]
+  droplet_ids = [data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.id : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].id : "")]
 
   # SSH
   inbound_rule {
@@ -129,14 +157,14 @@ resource "digitalocean_firewall" "app_firewall" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "8080"
-    source_addresses = ["${digitalocean_droplet.load_balancer.ipv4_address}/32"]
+    source_addresses = [data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.ipv4_address : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].ipv4_address : "") + "/32"]
   }
 
   # Frontend port from load balancer only
   inbound_rule {
     protocol         = "tcp"
     port_range       = "3000"
-    source_addresses = ["${digitalocean_droplet.load_balancer.ipv4_address}/32"]
+    source_addresses = [data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.ipv4_address : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].ipv4_address : "") + "/32"]
   }
 
   # All outbound traffic
@@ -162,19 +190,19 @@ resource "local_file" "ansible_inventory" {
   content = templatefile("${path.module}/templates/inventory.tpl",
     {
       app_ip = digitalocean_droplet.app_server.ipv4_address
-      lb_ip  = digitalocean_droplet.load_balancer.ipv4_address
+      lb_ip  = data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.ipv4_address : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].ipv4_address : "")
     }
   )
   filename = "../ansible/inventory.yml"
 }
 
-output "droplet_ip" {
+output "app_ip" {
   value = digitalocean_droplet.app_server.ipv4_address
   description = "The public IP address of the deployed app droplet"
 }
 
 output "load_balancer_ip" {
-  value = digitalocean_droplet.load_balancer.ipv4_address
+  value = data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.ipv4_address : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].ipv4_address : "")
   description = "The public IP address of the load balancer droplet (use this for Cloudflare DNS)"
 }
 
