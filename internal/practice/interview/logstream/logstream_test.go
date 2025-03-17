@@ -47,6 +47,7 @@ func TestLogStream(t *testing.T) {
 			if len(actual) != len(test.expected) {
 				t.Errorf("Expected %d, got %d", len(test.expected), len(actual))
 			}
+
 			for i := 0; i < len(actual); i++ {
 				if actual[i] != test.expected[i] {
 					t.Errorf("Expected %s, got %s", test.expected[i], actual[i])

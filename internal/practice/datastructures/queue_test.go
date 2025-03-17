@@ -22,7 +22,10 @@ func TestQueue(t *testing.T) {
 				q.Enqueue(3)
 
 				results := []int{}
-				results = append(results, q.Dequeue().(int), q.Dequeue().(int), q.Dequeue().(int))
+				res1, _ := q.Dequeue().(int)
+				res2, _ := q.Dequeue().(int)
+				res3, _ := q.Dequeue().(int)
+				results = append(results, res1, res2, res3)
 
 				return results
 			},
@@ -38,7 +41,10 @@ func TestQueue(t *testing.T) {
 				q.Enqueue(3)
 
 				results := []int{}
-				results = append(results, q.Peek().(int), q.Peek().(int), q.Peek().(int))
+				res1, _ := q.Peek().(int)
+				res2, _ := q.Peek().(int)
+				res3, _ := q.Peek().(int)
+				results = append(results, res1, res2, res3)
 
 				return results
 			},

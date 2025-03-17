@@ -5,25 +5,33 @@ package main
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
-
-	"github.com/gorilla/mux"
+	"time"
 )
 
 // HealthCheck handles health check requests.
-func HealthCheck(w http.ResponseWriter, r *http.Request) {
+func HealthCheck(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(map[string]string{"status": "healthy"})
+	_ = json.NewEncoder(w).Encode(map[string]string{"status": "healthy"})
 }
 
 func main() {
-	r := mux.NewRouter()
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", HealthCheck)
 
-	// Health check route
-	r.HandleFunc("/health", HealthCheck).Methods("GET")
+	server := &http.Server{
+		Addr:         ":8080",
+		Handler:      mux,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  15 * time.Second,
+	}
 
-	// Start server
-	log.Fatal(http.ListenAndServe(":8080", r))
+	fmt.Println("Starting server on :8080")
+
+	if err := server.ListenAndServe(); err != nil {
+		fmt.Println("Server failed:", err)
+	}
 }

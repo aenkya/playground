@@ -1,5 +1,6 @@
 package config
 
+//nolint:govet // Struct alignment is not a concern here
 type Config struct {
 	// The port to listen on
 	Port int `env:"PORT" envDefault:"8080"`

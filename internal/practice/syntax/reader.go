@@ -30,7 +30,6 @@ func (r *rot13Reader) Read(p []byte) (int, error) {
 	return n, err
 }
 
-//nolint:gocritic // the if statement makes more sense here
 func rot13(c byte) byte {
 	const rot = 13
 
@@ -46,9 +45,9 @@ func rot13(c byte) byte {
 		}
 
 		return c - rot
-	} else {
-		return c
 	}
+
+	return c
 }
 
 func Reader() {

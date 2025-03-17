@@ -10,7 +10,7 @@ import (
 
 type FileServer struct{}
 
-const PORT = ":3000"
+const PORT = "127.0.0.1:3000"
 
 func (fs *FileServer) start() {
 	ln, err := net.Listen("tcp", PORT)
@@ -48,6 +48,7 @@ func (fs *FileServer) readLoop(conn net.Conn) {
 
 func sendFile(size int) error {
 	file := make([]byte, size)
+
 	_, err := io.ReadFull(rand.Reader, file)
 	if err != nil {
 		return err

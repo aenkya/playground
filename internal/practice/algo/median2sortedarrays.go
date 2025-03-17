@@ -49,11 +49,11 @@ func (m *Median2SortedArrays) findKthSmallest(nums1, nums2 []int, k int) int {
 	}
 
 	if k == 1 {
-		return min(nums1[0], nums2[0])
+		return minint(nums1[0], nums2[0])
 	}
 
-	mid1 := min(len(nums1), k/2)
-	mid2 := min(len(nums2), k/2)
+	mid1 := minint(len(nums1), k/2)
+	mid2 := minint(len(nums2), k/2)
 
 	if nums1[mid1-1] < nums2[mid2-1] {
 		return m.findKthSmallest(nums1[mid1:], nums2, k-mid1)
@@ -62,7 +62,7 @@ func (m *Median2SortedArrays) findKthSmallest(nums1, nums2 []int, k int) int {
 	return m.findKthSmallest(nums1, nums2[mid2:], k-mid2)
 }
 
-func min(a, b int) int {
+func minint(a, b int) int {
 	if a < b {
 		return a
 	}
@@ -73,8 +73,10 @@ func min(a, b int) int {
 func (m *Median2SortedArrays) RunAlgo() {
 	for _, v := range m.versions {
 		for _, d := range m.testData {
-			arr1 := d.Input.([][]int)[0]
-			arr2 := d.Input.([][]int)[1]
+			intarr, _ := d.Input.([][]int)
+
+			arr1 := intarr[0]
+			arr2 := intarr[1]
 			fmt.Println(v(arr1, arr2))
 		}
 	}

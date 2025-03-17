@@ -23,8 +23,8 @@ https://www.coderbyte.com/results/bhanson:Seating%20Students:Go
 func SeatingStudents(arr []int) int {
 	K := arr[0]
 	occupied := arr[1:]
-
 	count := 0
+
 	for i := 1; i <= K; i++ {
 		if contains(occupied, i) {
 			continue
@@ -38,11 +38,8 @@ func SeatingStudents(arr []int) int {
 			if i+2 <= K && !contains(occupied, i+2) {
 				count++
 			}
-
-		} else {
-			if i+2 <= K && !contains(occupied, i+2) {
-				count++
-			}
+		} else if i+2 <= K && !contains(occupied, i+2) {
+			count++
 		}
 	}
 
@@ -55,5 +52,6 @@ func contains(arr []int, num int) bool {
 			return true
 		}
 	}
+
 	return false
 }

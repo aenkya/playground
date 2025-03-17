@@ -68,6 +68,7 @@ func TestOrderedSet(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			for _, v := range tt.want {
 				fmt.Println(tt.set.Get(v))
+
 				if _, found := tt.set.Get(v); !found {
 					t.Errorf("expected to find %v in set", v)
 				}

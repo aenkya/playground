@@ -21,5 +21,4 @@ func StartPractice() {
 	}
 
 	a.LoadTestData()
-	// a.RunAlgo()
 }
