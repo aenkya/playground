@@ -69,6 +69,12 @@ variable "domain_name" {
   default     = "enkya.org"
 }
 
+variable "recreate_firewall" {
+  description = "Force recreation of firewall even if it exists"
+  type        = bool
+  default     = false
+}
+
 variable "subdomain" {
   description = "Subdomain for the application (leave empty for root domain)"
   type        = string
