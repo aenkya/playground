@@ -94,19 +94,9 @@ data "digitalocean_ssh_key" "default" {
   name = var.ssh_key_name
 }
 
-data "digitalocean_firewall" "existing_lb_firewall" {
-  name = "playground-lb-firewall-${var.environment}"
-}
-
-data "digitalocean_firewall" "existing_app_firewall" {
-  name = "playground-app-firewall-${var.environment}"
-}
-
 # Firewall for load balancer - allows public HTTP/HTTPS access
 resource "digitalocean_firewall" "lb_firewall" {
   name = "playground-lb-firewall-${var.environment}"
-
-  count = var.recreate_firewall || (data.digitalocean_firewall.existing_lb_firewall.id == "") ? 1 : 0
 
   droplet_ids = [data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.id : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].id : "")]
 
@@ -153,8 +143,6 @@ resource "digitalocean_firewall" "lb_firewall" {
 # Firewall for app server - only allows traffic from load balancer and SSH
 resource "digitalocean_firewall" "app_firewall" {
   name = "playground-app-firewall-${var.environment}"
-
-  count = var.recreate_firewall || (data.digitalocean_firewall.existing_app_firewall.id == "") ? 1 : 0
 
   droplet_ids = [digitalocean_droplet.app_server.id]
 
