@@ -66,10 +66,29 @@ data "digitalocean_droplet" "existing_load_balancer" {
   name = "playground-lb-${var.environment}"
   # This will fail silently if the droplet doesn't exist
 }
+# Data source to find existing app server droplets
+data "external" "existing_app_servers" {
+  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${var.git_sha}\") | not) | {id: .id, name: .name}' "]
+}
+
+# Null resource to delete old app server droplets
+resource "null_resource" "delete_old_app_servers" {
+  depends_on = [digitalocean_droplet.app_server]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "${data.external.existing_app_servers.result}" | jq -r '.[].id' | while read id; do
+        curl -s -X DELETE \
+          -H "Authorization: Bearer ${var.do_token}" \
+          "https://api.digitalocean.com/v2/droplets/$id"
+      done
+    EOT
+  }
+}
 
 # Application droplet (recreated on each deployment)
 resource "digitalocean_droplet" "app_server" {
-  name     = "playground-${var.environment}"
+  name     = "playground-${var.environment}-${var.git_sha}"
   size     = var.droplet_size
   image    = var.droplet_image
   region   = var.region
@@ -142,7 +161,7 @@ resource "digitalocean_firewall" "lb_firewall" {
 
 # Firewall for app server - only allows traffic from load balancer and SSH
 resource "digitalocean_firewall" "app_firewall" {
-  name = "playground-app-firewall-${var.environment}"
+  name = "playground-app-firewall-${var.environment}-${var.git_sha}"
 
   droplet_ids = [digitalocean_droplet.app_server.id]
 
@@ -183,6 +202,13 @@ resource "digitalocean_firewall" "app_firewall" {
   outbound_rule {
     protocol              = "icmp"
     destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+
+  depends_on = [digitalocean_droplet.app_server]
+
+  # Force recreation when git_sha changes
+  lifecycle {
+    replace_triggered_by = [var.git_sha]
   }
 }
 

@@ -52,23 +52,13 @@ jobs:
           TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
           TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
 
-      - name: Destroy Existing App Firewall
-        if: ${{ !contains(github.event.head_commit.message, '[deploy-lb]') }}
-        run: |
-          cd infrastructure/terraform
-          terraform destroy -auto-approve -target=digitalocean_firewall.app_firewall
-        env:
-          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
-          TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
-
       - name: Terraform Apply Core Infrastructure
         run: |
           cd infrastructure/terraform
           terraform apply -auto-approve \
             -target=digitalocean_droplet.app_server \
-            -target=digitalocean_firewall.app_firewall
+            -target=digitalocean_firewall.app_firewall \
+            -var="git_sha=${{ github.sha::7 }}"
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
@@ -83,17 +73,6 @@ jobs:
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-      - name: Destroy Existing Load Balancer Firewall
-        if: contains(github.event.head_commit.message, '[deploy-lb]')
-        run: |
-          cd infrastructure/terraform
-          terraform destroy -auto-approve -target=digitalocean_firewall.lb_firewall
-        env:
-          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
-          TF_VAR_ssh_key_name: ${{ secrets.DO_SSH_KEY_NAME }}
-          TF_VAR_ssh_private_key_path: "~/.ssh/id_rsa"
-
       - name: Terraform Apply Load Balancer
         if: contains(github.event.head_commit.message, '[deploy-lb]')
         run: |
@@ -101,7 +80,8 @@ jobs:
           terraform apply -auto-approve \
             -target=digitalocean_droplet.load_balancer \
             -target=digitalocean_firewall.lb_firewall \
-            -var="recreate_load_balancer=true"
+            -var="recreate_load_balancer=true" \
+            -var="git_sha=${{ github.sha::7 }}"
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}

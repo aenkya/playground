@@ -74,3 +74,9 @@ variable "subdomain" {
   type        = string
   default     = "playground"
 }
+
+variable "git_sha" {
+  description = "Git commit SHA"
+  type        = string
+  default     = "latest"
+}
