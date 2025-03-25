@@ -28,6 +28,7 @@ resource "digitalocean_vpc" "app_network" {
 # Use the VPC ID from either the data source or the resource
 locals {
   vpc_id = data.digitalocean_vpc.playground_vpc.id != "" ? data.digitalocean_vpc.playground_vpc.id : (length(digitalocean_vpc.app_network) > 0 ? digitalocean_vpc.app_network[0].id : "")
+  git_sha = substr(var.git_sha, 0, 7)
 }
 
 # Load balancer droplet (created once, not part of CI/CD pipeline)
@@ -68,7 +69,7 @@ data "digitalocean_droplet" "existing_load_balancer" {
 }
 # Data source to find existing app server droplets
 data "external" "existing_app_servers" {
-  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${var.git_sha}\") | not) | {id: .id, name: .name}' "]
+  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${local.git_sha}\") | not) | {id: .id, name: .name}' "]
 }
 
 # Null resource to delete old app server droplets
@@ -88,7 +89,7 @@ resource "null_resource" "delete_old_app_servers" {
 
 # Application droplet (recreated on each deployment)
 resource "digitalocean_droplet" "app_server" {
-  name     = "playground-${var.environment}-${var.git_sha}"
+  name     = "playground-${var.environment}-${local.git_sha}"
   size     = var.droplet_size
   image    = var.droplet_image
   region   = var.region
@@ -161,7 +162,7 @@ resource "digitalocean_firewall" "lb_firewall" {
 
 # Firewall for app server - only allows traffic from load balancer and SSH
 resource "digitalocean_firewall" "app_firewall" {
-  name = "playground-app-firewall-${var.environment}-${var.git_sha}"
+  name = "playground-app-firewall-${var.environment}-${local.git_sha}"
 
   droplet_ids = [digitalocean_droplet.app_server.id]
 
