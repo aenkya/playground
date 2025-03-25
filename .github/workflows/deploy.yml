@@ -57,7 +57,8 @@ jobs:
           cd infrastructure/terraform
           terraform apply -auto-approve \
             -target=digitalocean_droplet.app_server \
-            -target=digitalocean_firewall.app_firewall
+            -target=digitalocean_firewall.app_firewall \
+            -var="git_sha=${{ github.sha::7 }}"
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
@@ -67,7 +68,7 @@ jobs:
       - name: Update SSH known_hosts
         run: |
           cd infrastructure/terraform
-          APP_IP=$(terraform output -raw droplet_ip)
+          APP_IP=$(terraform output -raw app_ip)
           ssh-keyscan -H $APP_IP >> ~/.ssh/known_hosts
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
@@ -77,7 +78,10 @@ jobs:
         run: |
           cd infrastructure/terraform
           terraform apply -auto-approve \
-            -target=digitalocean_droplet.load_balancer
+            -target=digitalocean_droplet.load_balancer \
+            -target=digitalocean_firewall.lb_firewall \
+            -var="recreate_load_balancer=true" \
+            -var="git_sha=${{ github.sha::7 }}"
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}

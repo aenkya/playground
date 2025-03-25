@@ -57,6 +57,12 @@ variable "monitoring" {
   default     = false
 }
 
+variable "recreate_load_balancer" {
+  description = "Force recreation of load balancer even if it exists"
+  type        = bool
+  default     = false
+}
+
 variable "domain_name" {
   description = "Domain name for the application"
   type        = string
@@ -67,4 +73,10 @@ variable "subdomain" {
   description = "Subdomain for the application (leave empty for root domain)"
   type        = string
   default     = "playground"
+}
+
+variable "git_sha" {
+  description = "Git commit SHA"
+  type        = string
+  default     = "latest"
 }
