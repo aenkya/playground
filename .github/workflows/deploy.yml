@@ -58,7 +58,7 @@ jobs:
           terraform apply -auto-approve \
             -target=digitalocean_droplet.app_server \
             -target=digitalocean_firewall.app_firewall \
-            -var="git_sha=${{ github.sha::7 }}"
+            -var="git_sha=${{ github.sha }}"
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
@@ -81,7 +81,7 @@ jobs:
             -target=digitalocean_droplet.load_balancer \
             -target=digitalocean_firewall.lb_firewall \
             -var="recreate_load_balancer=true" \
-            -var="git_sha=${{ github.sha::7 }}"
+            -var="git_sha=${{ github.sha }}"
         env:
           DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
           TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
