@@ -69,7 +69,11 @@ data "digitalocean_droplet" "existing_load_balancer" {
 }
 # Data source to find existing app server droplets
 data "external" "existing_app_servers" {
-  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${local.git_sha}\") | not) | {id: .id, name: .name}' "]
+  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${local.git_sha}\") | not) | {\"id\": \"\" + .id, \"name\": .name}' | jq -s add"]
+}
+
+data "external" "existing_app_firewalls" {
+  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/firewalls\" | jq -r '.firewalls | map({id: .id, name: .name}) | .[] | select((.name | contains(\"playground-app-firewall-${var.environment}-${local.git_sha}\") | not) and (.name | contains(\"playground-lb-firewall-${var.environment}\") | not)) | {\"id\": \"\" + .id, \"name\": .name}' | jq -s add "]
 }
 
 # Null resource to delete old app server droplets
@@ -82,6 +86,21 @@ resource "null_resource" "delete_old_app_servers" {
         curl -s -X DELETE \
           -H "Authorization: Bearer ${var.do_token}" \
           "https://api.digitalocean.com/v2/droplets/$id"
+      done
+    EOT
+  }
+}
+
+resource "null_resource" "delete_old_app_firewall" {
+  depends_on = [digitalocean_firewall.app_firewall]
+
+
+  provisioner "local-exec" {
+    command = <<EOT
+      echo "${data.external.existing_app_firewalls.result}" | jq -r '.[].id' | while read id; do
+        curl -s -X DELETE \
+          -H "Authorization: Bearer ${var.do_token}" \
+          "https://api.digitalocean.com/v2/firewalls/$id"
       done
     EOT
   }
@@ -119,6 +138,8 @@ resource "digitalocean_firewall" "lb_firewall" {
   name = "playground-lb-firewall-${var.environment}"
 
   droplet_ids = [data.digitalocean_droplet.existing_load_balancer.id != "" ? data.digitalocean_droplet.existing_load_balancer.id : (length(digitalocean_droplet.load_balancer) > 0 ? digitalocean_droplet.load_balancer[0].id : "")]
+
+  tags       = ["lb", var.environment]
 
   # SSH
   inbound_rule {
@@ -165,6 +186,7 @@ resource "digitalocean_firewall" "app_firewall" {
   name = "playground-app-firewall-${var.environment}-${local.git_sha}"
 
   droplet_ids = [digitalocean_droplet.app_server.id]
+  tags       = ["app", var.environment]
 
   # SSH
   inbound_rule {
@@ -206,11 +228,6 @@ resource "digitalocean_firewall" "app_firewall" {
   }
 
   depends_on = [digitalocean_droplet.app_server]
-
-  # Force recreation when git_sha changes
-  lifecycle {
-    replace_triggered_by = [var.git_sha]
-  }
 }
 
 resource "local_file" "ansible_inventory" {
