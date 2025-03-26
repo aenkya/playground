@@ -69,11 +69,11 @@ data "digitalocean_droplet" "existing_load_balancer" {
 }
 # Data source to find existing app server droplets
 data "external" "existing_app_servers" {
-  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${local.git_sha}\") | not) | {id: .id, name: .name}' "]
+  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/droplets?tag_name=app\" | jq -r '.droplets | map({id: .id, name: .name}) | .[] | select(.name | contains(\"playground-${var.environment}-${local.git_sha}\") | not) | {\"id\": \"\" + .id, \"name\": .name}' | jq -s add"]
 }
 
 data "external" "existing_app_firewalls" {
-  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/firewalls\" | jq -r '.firewalls | map({id: .id, name: .name}) | .[] | select((.name | contains(\"playground-app-firewall-${var.environment}-${local.git_sha}\") | not) and (.name | contains(\"playground-lb-firewall-${var.environment}\") | not)) | {id: .id, name: .name}' "]
+  program = ["sh", "-c", "curl -s -X GET -H 'Content-Type: application/json' -H \"Authorization: Bearer ${var.do_token}\" \"https://api.digitalocean.com/v2/firewalls\" | jq -r '.firewalls | map({id: .id, name: .name}) | .[] | select((.name | contains(\"playground-app-firewall-${var.environment}-${local.git_sha}\") | not) and (.name | contains(\"playground-lb-firewall-${var.environment}\") | not)) | {\"id\": \"\" + .id, \"name\": .name}' | jq -s add "]
 }
 
 # Null resource to delete old app server droplets
