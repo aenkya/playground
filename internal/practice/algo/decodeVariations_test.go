@@ -7,6 +7,7 @@ func TestDecodeVariations(t *testing.T) {
 		input    string
 		expected int
 	}{
+		{"1262", 3},  // "(1,2,6,2), (12,6,2), (1,26,2)"
 		{"12", 2},    // "AB" (1,2) and "L" (12)
 		{"226", 3},   // "BZ" (2,26), "VF" (22,6), "BBF" (2,2,6)
 		{"0", 0},     // No valid decoding
@@ -22,6 +23,11 @@ func TestDecodeVariations(t *testing.T) {
 	for _, test := range tests {
 		result := decodeVariations(test.input)
 		if result != test.expected {
+			t.Errorf("decodeVariations(%q) = %d; want %d", test.input, result, test.expected)
+		}
+
+		result2 := decodeVariationsBruteforce(test.input)
+		if result2 != test.expected {
 			t.Errorf("decodeVariations(%q) = %d; want %d", test.input, result, test.expected)
 		}
 	}
