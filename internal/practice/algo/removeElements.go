@@ -12,11 +12,11 @@ func removeElement(nums []int, val int) int {
 		- remove all occurrences of val from nums
 		- return the number of elements after removing the duplicates
 	*/
-
 	k := 0
-	for i := 0; i < len(nums); i++ {
-		if nums[i] != val {
-			nums[k] = nums[i]
+
+	for _, e := range nums {
+		if e != val {
+			nums[k] = e
 			k++
 		}
 	}
