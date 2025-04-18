@@ -22,17 +22,17 @@ func (bs *MergeSort) MergeSortV1(a []int) []int {
 		return a
 	}
 
-	return recursiveMergeSort(a)
+	return RecursiveMergeSort(a)
 }
 
-func recursiveMergeSort(a []int) []int {
+func RecursiveMergeSort(a []int) []int {
 	if len(a) <= 1 {
 		return a
 	}
 
 	mid := len(a) / 2
-	left := recursiveMergeSort(a[:mid])
-	right := recursiveMergeSort(a[mid:])
+	left := RecursiveMergeSort(a[:mid])
+	right := RecursiveMergeSort(a[mid:])
 
 	return merge(left, right)
 }
