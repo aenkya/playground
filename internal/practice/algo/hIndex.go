@@ -1,7 +1,7 @@
 package algo
 
 import (
-	"enkya.org/playground/internal/practice/sort"
+	psort "enkya.org/playground/internal/practice/sort"
 )
 
 func hIndex(citations []int) int {
@@ -10,7 +10,7 @@ func hIndex(citations []int) int {
 		return 0
 	}
 
-	sorted := sort.RecursiveMergeSort(citations)
+	sorted := psort.RecursiveMergeSort(citations)
 
 	phIndex := n
 	hIndex := 0
