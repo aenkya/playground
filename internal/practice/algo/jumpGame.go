@@ -5,7 +5,7 @@ func canJump(nums []int) bool {
 	return travel(memo, nums, 0) || canJumpGreedy(nums)
 }
 
-func backtrack(memo map[int]bool, nums []int, index int) bool {
+func travel(memo map[int]bool, nums []int, index int) bool {
 	if val, ok := memo[index]; ok {
 		return val
 	}
