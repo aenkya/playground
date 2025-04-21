@@ -2,7 +2,7 @@ package algo
 
 func canJump(nums []int) bool {
 	memo := make(map[int]bool)
-	return backtrack(memo, nums, 0) || canJumpGreedy(nums)
+	return travel(memo, nums, 0) || canJumpGreedy(nums)
 }
 
 func backtrack(memo map[int]bool, nums []int, index int) bool {
@@ -21,7 +21,7 @@ func backtrack(memo map[int]bool, nums []int, index int) bool {
 	}
 
 	for i := nums[index]; i > 0; i-- {
-		if backtrack(memo, nums, index+i) {
+		if travel(memo, nums, index+i) {
 			return true
 		}
 	}
