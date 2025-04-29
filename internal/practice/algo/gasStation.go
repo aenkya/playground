@@ -1,6 +1,6 @@
 package algo
 
-func canCompleteCircuit(gas []int, cost []int) int {
+func canCompleteCircuit(gas, cost []int) int {
 	totalTank, currentTank, start := 0, 0, 0
 
 	for i := range len(gas) {

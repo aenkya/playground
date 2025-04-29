@@ -54,9 +54,11 @@ func TestRemoveDuplicatesII(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			nums := append([]int{}, tt.input...) // Create a copy of the input
 			k := removeDuplicatesII(nums)
+
 			if k != tt.k {
 				t.Errorf("expected k = %d, got %d", tt.k, k)
 			}
+
 			if !reflect.DeepEqual(nums[:k], tt.expected) {
 				t.Errorf("expected nums = %v, got %v", tt.expected, nums[:k])
 			}

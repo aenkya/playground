@@ -18,19 +18,19 @@ func removeDuplicatesII(nums []int) int {
 		return 1
 	}
 
-	unique_id := 0
-	prev_dup_id := unique_id
-	for j := 1; j < len(nums); j++ {
+	uniqueID := 0
+	prevDupID := uniqueID
 
-		if nums[j] != nums[unique_id] {
-			unique_id++
-			nums[unique_id] = nums[j]
-			prev_dup_id = unique_id
-		} else if prev_dup_id == unique_id {
-			unique_id++
-			nums[unique_id] = nums[j]
+	for j := 1; j < len(nums); j++ {
+		if nums[j] != nums[uniqueID] {
+			uniqueID++
+			nums[uniqueID] = nums[j]
+			prevDupID = uniqueID
+		} else if prevDupID == uniqueID {
+			uniqueID++
+			nums[uniqueID] = nums[j]
 		}
 	}
 
-	return unique_id + 1
+	return uniqueID + 1
 }

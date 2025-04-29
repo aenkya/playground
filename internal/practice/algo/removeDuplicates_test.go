@@ -48,9 +48,11 @@ func TestRemoveDuplicates(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			nums := append([]int{}, tt.input...) // Create a copy to avoid modifying the original input
 			length := removeDuplicates(nums)
+
 			if length != tt.length {
 				t.Errorf("expected length %d, got %d", tt.length, length)
 			}
+
 			if !reflect.DeepEqual(nums[:length], tt.expected) {
 				t.Errorf("expected array %v, got %v", tt.expected, nums[:length])
 			}

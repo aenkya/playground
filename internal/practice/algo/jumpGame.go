@@ -33,22 +33,19 @@ func canJumpGreedy(nums []int) bool {
 	if len(nums) == 0 {
 		return false
 	}
+
 	if len(nums) == 1 {
 		return true
 	}
+
 	maxReach := 0
 	for i := 0; i < len(nums); i++ {
 		if i > maxReach {
 			return false
 		}
+
 		maxReach = max(maxReach, i+nums[i])
 	}
-	return true
-}
 
-func max(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+	return true
 }

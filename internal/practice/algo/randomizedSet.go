@@ -1,12 +1,13 @@
 package algo
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"math/big"
 )
 
 type RandomizedSet struct {
-	keys   []int
 	values map[int]int
+	keys   []int
 }
 
 func Constructor() RandomizedSet {
@@ -46,5 +47,6 @@ func (rs *RandomizedSet) Remove(val int) bool {
 }
 
 func (rs *RandomizedSet) GetRandom() int {
-	return rs.keys[rand.Intn(len(rs.keys))]
+	rn, _ := rand.Int(rand.Reader, big.NewInt(int64(len(rs.keys))))
+	return rs.keys[rn.Int64()]
 }

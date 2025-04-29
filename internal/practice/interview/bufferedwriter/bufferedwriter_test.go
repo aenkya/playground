@@ -34,7 +34,9 @@ func TestBufferedWriter_WriteAndFlush(t *testing.T) {
 
 	// Check if remaining data is in the buffer
 	expectedRemaining := " world"
+
 	bw.Flush()
+
 	if mock.writtenData.String()[len(expectedFirstFlush):] != expectedRemaining {
 		t.Errorf("expected second flush to write '%s', got '%s'", expectedRemaining, mock.writtenData.String()[len(expectedFirstFlush):])
 	}

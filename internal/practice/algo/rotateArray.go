@@ -1,7 +1,7 @@
 package algo
 
 func rotate(nums []int, k int) {
-	k = k % len(nums)
+	k %= len(nums)
 	n := len(nums)
 
 	reverse(nums, 0, n-1)

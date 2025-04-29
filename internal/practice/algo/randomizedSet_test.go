@@ -24,12 +24,14 @@ func TestConstructor(t *testing.T) {
 			rs := Constructor()
 
 			for i, action := range tt.actions {
+				iint, _ := tt.inputs[i].(int)
+
 				switch action {
 				case "insert":
-					got := rs.Insert(tt.inputs[i].(int))
+					got := rs.Insert(iint)
 					assert.Equalf(t, tt.expects[i], got, "%s not equal to %s", tt.expects[i], got)
 				case "remove":
-					got := rs.Remove(tt.inputs[i].(int))
+					got := rs.Remove(iint)
 					assert.Equalf(t, tt.expects[i], got, "%s not equal to %s", tt.expects[i], got)
 				}
 			}

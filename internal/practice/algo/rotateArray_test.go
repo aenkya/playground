@@ -9,13 +9,13 @@ import (
 func TestRotateArray(t *testing.T) {
 	tests := []struct {
 		given     []int
-		rotations int
 		want      []int
+		rotations int
 	}{
 		{
 			[]int{1, 2, 3, 4, 5, 6, 7},
-			3,
 			[]int{5, 6, 7, 1, 2, 3, 4},
+			3,
 		},
 	}
 
