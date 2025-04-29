@@ -72,3 +72,5 @@ client/node_modules
 client/.next
 client/.next/cache
 secrets.txt
+client/package-lock.json
+.vscode/settings.json
