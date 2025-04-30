@@ -2,7 +2,7 @@ package algo
 
 import "strings"
 
-func wordPattern(pattern string, s string) bool {
+func wordPattern(pattern, s string) bool {
 	split := strings.Fields(s)
 
 	if len(pattern) != len(split) {

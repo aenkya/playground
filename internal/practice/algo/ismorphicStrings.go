@@ -1,6 +1,6 @@
 package algo
 
-func isIsomorphic(s string, t string) bool {
+func isIsomorphic(s, t string) bool {
 	charIndexS := make(map[byte]int)
 	charIndexT := make(map[byte]int)
 
