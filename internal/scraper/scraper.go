@@ -107,11 +107,19 @@ func (s *Scraper) worker(ctx context.Context) {
 				continue
 			}
 
-			// process url
+			result := s.scrapePage(ctx, url)
 
-			// store result
+			s.resultsMutex.Lock()
+			s.results = append(s.results, result)
+			s.resultsMutex.Unlock()
 
 			log.Printf("scraped: %s, status: %d", url, 200)
 		}
 	}
+}
+
+func (s *Scraper) scrapePage(_ context.Context, url string) PageResult {
+	result := PageResult{URL: url}
+
+	return result
 }
