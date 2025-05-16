@@ -2,10 +2,17 @@ package scraper
 
 import (
 	"context"
+	"encoding/csv"
+	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	"os"
+	"path"
+	"strings"
 	"sync"
 
+	"github.com/PuerkitoBio/goquery"
 	"golang.org/x/time/rate"
 )
 
@@ -58,7 +65,11 @@ func (s *Scraper) Start(ctx context.Context) error {
 		s.wg.Add(1)
 		go s.worker(ctx)
 	}
-	return nil
+
+	s.wg.Wait()
+	close(s.urlQueue)
+
+	return s.saveResults()
 }
 
 func (s *Scraper) queueURL(url string) {
@@ -113,13 +124,136 @@ func (s *Scraper) worker(ctx context.Context) {
 			s.results = append(s.results, result)
 			s.resultsMutex.Unlock()
 
-			log.Printf("scraped: %s, status: %d", url, 200)
+			log.Printf("scraped: %s, status: %d", url, result.Status)
 		}
 	}
 }
 
-func (s *Scraper) scrapePage(_ context.Context, url string) PageResult {
+func (s *Scraper) scrapePage(ctx context.Context, url string) PageResult {
 	result := PageResult{URL: url}
 
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	if err != nil {
+		result.Error = err
+		return result
+	}
+
+	req.Header.Set("User-Agent", s.config.UserAgent)
+
+	resp, err := s.client.Do(req)
+	if err != nil {
+		result.Error = err
+		return result
+	}
+	defer resp.Body.Close()
+
+	result.Status = resp.StatusCode
+	if resp.StatusCode != http.StatusOK {
+		result.Error = fmt.Errorf("non-200 status code: %d", resp.StatusCode)
+		return result
+	}
+
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		result.Error = err
+		return result
+	}
+
+	doc.Find("a[href]").Each(func(_ int, sel *goquery.Selection) {
+		if href, exists := sel.Attr("href"); exists {
+			resolvedURL := s.resolveURL(url, href)
+			if resolvedURL != "" && s.shouldCrawl(resolvedURL) {
+				s.queueURL(resolvedURL)
+			}
+		}
+	})
+
 	return result
+}
+
+func (s *Scraper) shouldCrawl(urlStr string) bool {
+	parsedURL, err := url.Parse(urlStr)
+	if err != nil {
+		return false
+	}
+
+	parentDepth, exists := s.crawlDepth[urlStr]
+	if !exists {
+		parentURL := parsedURL.Scheme + "://" + parsedURL.Host + path.Dir(parsedURL.Path)
+		if parentDepth, exists = s.crawlDepth[parentURL]; !exists {
+			parentDepth = 0
+		}
+	}
+
+	newDepth := parentDepth + 1
+	if s.maxDepth > 0 && newDepth > s.maxDepth {
+		return false
+	}
+
+	s.crawlDepth[urlStr] = newDepth
+
+	if s.config.RobotsPolicy {
+		// do robot check
+	}
+	return true
+}
+
+func (s *Scraper) resolveURL(baseURL, href string) string {
+	base, err := url.Parse(baseURL)
+	if err != nil {
+		return ""
+	}
+
+	// Handle absolute URLs
+	if strings.HasPrefix(href, "http://") || strings.HasPrefix(href, "https://") {
+		parsedURL, err := url.Parse(href)
+		if err != nil {
+			return ""
+		}
+
+		return parsedURL.String()
+	}
+
+	// Handle relative URLs
+	relativeURL, err := url.Parse(href)
+	if err != nil {
+		return ""
+	}
+
+	resolvedURL := base.ResolveReference(relativeURL)
+	return resolvedURL.String()
+}
+
+func (s *Scraper) saveResults() error {
+	file, err := os.Create(s.config.OutputFile)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	if err := writer.Write([]string{"URL", "Title", "Description", "Status", "Error"}); err != nil {
+		return err
+	}
+
+	for _, result := range s.results {
+		errorMsg := ""
+		if result.Error != nil {
+			errorMsg = result.Error.Error()
+		}
+
+		if err := writer.Write([]string{
+			result.URL,
+			result.Title,
+			result.Description,
+			fmt.Sprintf("%d", result.Status),
+			errorMsg,
+		}); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
