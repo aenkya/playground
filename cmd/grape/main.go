@@ -6,7 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"enkya.org/playground/internal/scraper"
+	s "enkya.org/playground/internal/scraper"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -16,12 +16,13 @@ func main() {
 		log.Fatalf("failed to load env file: %v", err)
 	}
 
-	cfg := scraper.Config{}
+	cfg := s.Config{}
 	envconfig.MustProcess("grape", &cfg)
 	log.Println("Starting web scraper...")
 
 	ctx := context.Background()
 
+	scraper := s.NewScraper(cfg)
 	err = scraper.Start(ctx)
 	if err != nil {
 		log.Fatalf("Scraper error: %v", err)

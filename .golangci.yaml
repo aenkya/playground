@@ -1,50 +1,7 @@
-linters-settings:
-  depguard:
-    # currently disabled. add to enable list to use
-    # Variables:
-    # - File Variables
-    #   you can still use and exclamation mark ! in front of a variable to say not to use it.
-    #   Example !$test will match any file that is not a go test file.
-    #
-    #   `$all` - matches all go files
-    #   `$test` - matches all go test files
-    #
-    # - Package Variables
-    #
-    #  `$gostd` - matches all of go's standard library (Pulled from `GOROOT`)
-    rules:
-      main:
-        # List of file globs that will match this list of settings to compare against.
-        # Default: $all
-        files:
-          - "!**/*_a _file.go"
-        # List of allowed packages.
-        allow:
-          - $gostd
-        # Packages that are not allowed where the value is a suggestion.
-        deny:
-          - pkg: "github.com/sirupsen/logrus"
-            desc: not allowed
-  errcheck:
-    check-type-assertions: true
-  goconst:
-    min-len: 2
-    min-occurrences: 3
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - experimental
-      - performance
-      - style
-  govet:
-    enable:
-      - fieldalignment
-  nolintlint:
-    require-explanation: true
-    require-specific: true
-
+version: "2"
 linters:
-  disable-all: true
+  disable:
+    - all
   enable:
     - bodyclose
     - dogsled
@@ -75,6 +32,47 @@ linters:
     - unparam
     - whitespace
     - wsl
+  settings:
+    depguard:
+      # currently disabled. add to enable list to use
+      # Variables:
+      # - File Variables
+      #   you can still use and exclamation mark ! in front of a variable to say not to use it.
+      #   Example !$test will match any file that is not a go test file.
+      #
+      #   `$all` - matches all go files
+      #   `$test` - matches all go test files
+      #
+      # - Package Variables
+      #
+      #  `$gostd` - matches all of go's standard library (Pulled from `GOROOT`)
+      rules:
+        main:
+          # List of file globs that will match this list of settings to compare against.
+          # Default: $all
+          files:
+            - "!**/*_a _file.go"
+          # List of allowed packages.
+          allow:
+            - $gostd
+          # Packages that are not allowed where the value is a suggestion.
+          deny:
+            - pkg: "github.com/sirupsen/logrus"
+              desc: not allowed
+    errcheck:
+      check-type-assertions: true
+    goconst:
+      min-len: 2
+      min-occurrences: 3
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - experimental
+        - performance
+        - style
+    nolintlint:
+      require-explanation: true
+      require-specific: true
 
 run:
   issues-exit-code: 1

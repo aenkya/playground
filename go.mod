@@ -9,6 +9,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.17.3
+	golang.org/x/time v0.11.0
 )
 
 require (
