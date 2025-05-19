@@ -1,6 +1,7 @@
 package scraper
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 	"sync"
 
@@ -61,13 +63,17 @@ func (s *Scraper) Start(ctx context.Context) error {
 		s.queueURL(url)
 	}
 
+	// Create a single context with timeout for all workers
+	ctx, cancel := context.WithTimeout(ctx, s.config.Timeout)
+	defer cancel()
+
 	for i := 0; i < s.config.MaxWorkers; i++ {
 		s.wg.Add(1)
 		go s.worker(ctx)
 	}
 
 	s.wg.Wait()
-	close(s.urlQueue)
+	close(s.urlQueue) // Close the channel to signal no more URLs will be sent
 
 	return s.saveResults()
 }
@@ -86,17 +92,21 @@ func (s *Scraper) queueURL(url string) {
 	depth, exists := s.crawlDepth[url]
 	if !exists {
 		depth = 0
-		for _, startURL := range s.config.StartingURLs {
-			if url == startURL {
-				s.crawlDepth[url] = depth
-				s.urlQueue <- url
-				return
-			}
-		}
+		s.crawlDepth[url] = depth
 	}
 
-	s.crawlDepth[url] = depth
 	s.urlQueue <- url
+}
+
+func getGID() string {
+	b := make([]byte, 64)
+	b = b[:runtime.Stack(b, false)]
+	b = bytes.TrimPrefix(b, []byte("goroutine "))
+	i := bytes.IndexByte(b, ' ')
+	if i < 0 {
+		return "unknown"
+	}
+	return string(b[:i])
 }
 
 func (s *Scraper) worker(ctx context.Context) {
@@ -107,10 +117,10 @@ func (s *Scraper) worker(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case url, ok := <-s.urlQueue:
+			fmt.Println(getGID(), ":\tconsumed:\t", url)
 			if !ok {
 				return
 			}
-
 			// wait for rate limiter
 			err := s.rateLimiter.Wait(ctx)
 			if err != nil {
@@ -118,8 +128,10 @@ func (s *Scraper) worker(ctx context.Context) {
 				continue
 			}
 
+			fmt.Println(getGID(), ":\tscraping:\t", url)
 			result := s.scrapePage(ctx, url)
 
+			fmt.Println(getGID(), ":\tstoring:\t", url)
 			s.resultsMutex.Lock()
 			s.results = append(s.results, result)
 			s.resultsMutex.Unlock()
@@ -159,8 +171,13 @@ func (s *Scraper) scrapePage(ctx context.Context, url string) PageResult {
 		return result
 	}
 
+	result.Title = strings.TrimSpace((doc.Find("title")).Text())
+	result.Description = strings.TrimSpace(doc.Find("meta[name='description']").AttrOr("content", ""))
+
+	count := 0
 	doc.Find("a[href]").Each(func(_ int, sel *goquery.Selection) {
 		if href, exists := sel.Attr("href"); exists {
+			count++
 			resolvedURL := s.resolveURL(url, href)
 			if resolvedURL != "" && s.shouldCrawl(resolvedURL) {
 				s.queueURL(resolvedURL)
@@ -168,6 +185,7 @@ func (s *Scraper) scrapePage(ctx context.Context, url string) PageResult {
 		}
 	})
 
+	fmt.Println(getGID(), result.URL, "\t(", count, ")  ", result.Description)
 	return result
 }
 
