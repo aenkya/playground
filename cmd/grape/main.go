@@ -23,6 +23,7 @@ func main() {
 	ctx := context.Background()
 
 	scraper := s.NewScraper(cfg)
+
 	err = scraper.Start(ctx)
 	if err != nil {
 		log.Fatalf("Scraper error: %v", err)

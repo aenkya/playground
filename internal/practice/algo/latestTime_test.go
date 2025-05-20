@@ -3,7 +3,6 @@ package algo
 import "testing"
 
 func TestLatestTime(t *testing.T) {
-	//nolint:govet // ignore struct optimisation
 	tests := []struct {
 		name     string
 		input    []int

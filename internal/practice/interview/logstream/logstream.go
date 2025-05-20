@@ -7,7 +7,6 @@ import (
 	pio "enkya.org/playground/internal/practice/io"
 )
 
-//nolint:govet // ignore struct field order
 type LogStream struct {
 	description       string
 	currentQueryIndex int

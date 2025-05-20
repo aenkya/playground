@@ -15,6 +15,7 @@ import (
 	"sync"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/temoto/robotstxt"
 	"golang.org/x/time/rate"
 )
 
@@ -58,7 +59,6 @@ func NewScraper(config Config) *Scraper {
 }
 
 func (s *Scraper) Start(ctx context.Context) error {
-
 	for _, url := range s.config.StartingURLs {
 		s.queueURL(url)
 	}
@@ -91,10 +91,10 @@ func (s *Scraper) queueURL(url string) {
 	// set depth to 0 for starting URLs
 	depth, exists := s.crawlDepth[url]
 	if !exists {
-		depth = 0
-		s.crawlDepth[url] = depth
+		s.crawlDepth[url] = 1
 	}
 
+	s.crawlDepth[url] = depth
 	s.urlQueue <- url
 }
 
@@ -102,10 +102,12 @@ func getGID() string {
 	b := make([]byte, 64)
 	b = b[:runtime.Stack(b, false)]
 	b = bytes.TrimPrefix(b, []byte("goroutine "))
+
 	i := bytes.IndexByte(b, ' ')
 	if i < 0 {
 		return "unknown"
 	}
+
 	return string(b[:i])
 }
 
@@ -117,26 +119,20 @@ func (s *Scraper) worker(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case url, ok := <-s.urlQueue:
-			fmt.Println(getGID(), ":\tconsumed:\t", url)
 			if !ok {
 				return
 			}
 			// wait for rate limiter
 			err := s.rateLimiter.Wait(ctx)
 			if err != nil {
-				log.Printf("Rate limiter error: %v", err)
+				log.Printf("[Goroutine %s]\tRate limiter error: %v", getGID(), err)
 				continue
 			}
 
-			fmt.Println(getGID(), ":\tscraping:\t", url)
 			result := s.scrapePage(ctx, url)
-
-			fmt.Println(getGID(), ":\tstoring:\t", url)
 			s.resultsMutex.Lock()
 			s.results = append(s.results, result)
 			s.resultsMutex.Unlock()
-
-			log.Printf("scraped: %s, status: %d", url, result.Status)
 		}
 	}
 }
@@ -175,9 +171,11 @@ func (s *Scraper) scrapePage(ctx context.Context, url string) PageResult {
 	result.Description = strings.TrimSpace(doc.Find("meta[name='description']").AttrOr("content", ""))
 
 	count := 0
+
 	doc.Find("a[href]").Each(func(_ int, sel *goquery.Selection) {
 		if href, exists := sel.Attr("href"); exists {
 			count++
+
 			resolvedURL := s.resolveURL(url, href)
 			if resolvedURL != "" && s.shouldCrawl(resolvedURL) {
 				s.queueURL(resolvedURL)
@@ -185,7 +183,6 @@ func (s *Scraper) scrapePage(ctx context.Context, url string) PageResult {
 		}
 	})
 
-	fmt.Println(getGID(), result.URL, "\t(", count, ")  ", result.Description)
 	return result
 }
 
@@ -193,6 +190,22 @@ func (s *Scraper) shouldCrawl(urlStr string) bool {
 	parsedURL, err := url.Parse(urlStr)
 	if err != nil {
 		return false
+	}
+
+	// Check domain restrictions
+	if len(s.config.AllowedDomains) > 0 {
+		domainAllowed := false
+
+		for _, domain := range s.config.AllowedDomains {
+			if strings.Contains(parsedURL.Host, domain) {
+				domainAllowed = true
+				break
+			}
+		}
+
+		if !domainAllowed {
+			return false
+		}
 	}
 
 	parentDepth, exists := s.crawlDepth[urlStr]
@@ -210,10 +223,78 @@ func (s *Scraper) shouldCrawl(urlStr string) bool {
 
 	s.crawlDepth[urlStr] = newDepth
 
-	if s.config.RobotsPolicy {
-		// do robot check
+	if len(s.config.URLFilters) > 0 {
+		matched := false
+
+		for _, pattern := range s.config.URLFilters {
+			if strings.Contains(urlStr, pattern) {
+				matched = true
+				break
+			}
+		}
+
+		if !matched {
+			return false
+		}
 	}
+
+	for _, pattern := range s.config.ExcludeURLs {
+		if strings.Contains(urlStr, pattern) {
+			return false
+		}
+	}
+
+	if s.config.RobotsPolicy {
+		allowed, err := s.isAllowedByRobots(urlStr)
+		if err != nil || !allowed {
+			return false
+		}
+	}
+
 	return true
+}
+
+var robotsCache = make(map[string]*robotstxt.RobotsData)
+var robotsCacheMutex sync.Mutex
+
+func (s *Scraper) isAllowedByRobots(urlStr string) (bool, error) {
+	parsedURL, err := url.Parse(urlStr)
+	if err != nil {
+		return false, err
+	}
+
+	robotsURLStr := parsedURL.Scheme + "://" + parsedURL.Host + "/robots.txt"
+	robotsURL, err := url.Parse(robotsURLStr)
+
+	if err != nil {
+		return false, fmt.Errorf("robots URL %v is not valid", robotsURLStr)
+	}
+
+	robotsCacheMutex.Lock()
+	robotsData, exists := robotsCache[parsedURL.Host]
+	robotsCacheMutex.Unlock()
+
+	if !exists {
+		resp, err := http.Get(robotsURL.String())
+		if err != nil {
+			// If we can't fetch the robots.txt, we'll assume it is allowed
+			return true, nil
+		}
+		defer resp.Body.Close()
+
+		robotsData, err = robotstxt.FromResponse(resp)
+		if err != nil {
+			return true, nil
+		}
+
+		robotsCacheMutex.Lock()
+		robotsCache[parsedURL.Host] = robotsData
+		robotsCacheMutex.Unlock()
+	}
+
+	agent := robotsData.FindGroup(s.config.UserAgent)
+
+	return agent.Test(parsedURL.Path), nil
 }
 
 func (s *Scraper) resolveURL(baseURL, href string) string {
@@ -239,6 +320,7 @@ func (s *Scraper) resolveURL(baseURL, href string) string {
 	}
 
 	resolvedURL := base.ResolveReference(relativeURL)
+
 	return resolvedURL.String()
 }
 
