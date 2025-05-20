@@ -2,7 +2,6 @@ package datastructures
 
 import "sync"
 
-//nolint:govet // ignore struct field order
 type OrderedSet struct {
 	currentIndex int
 	mu           sync.Mutex

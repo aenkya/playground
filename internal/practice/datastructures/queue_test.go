@@ -6,7 +6,6 @@ import (
 )
 
 func TestQueue(t *testing.T) {
-	//nolint:govet // ignore struct optimisation
 	tests := []struct {
 		name      string
 		operation func() any
