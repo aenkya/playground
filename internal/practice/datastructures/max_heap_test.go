@@ -7,111 +7,148 @@ import (
 )
 
 func TestMaxHeap(t *testing.T) {
-	t.Run("Push and Pop", func(t *testing.T) {
-		h := NewMaxHeap()
-		h.Push(10)
-		h.Push(4)
-		h.Push(15)
-		h.Push(20)
-		h.Push(2)
-		h.Push(8)
-
-		expectedOrder := []int{20, 15, 10, 8, 4, 2}
-		for _, expected := range expectedOrder {
-			val, err := h.Pop()
-			assert.NoError(t, err)
-			assert.Equal(t, expected, val)
+	t.Run("Pop", func(t *testing.T) {
+		testCases := []struct {
+			name          string
+			initialValues []int
+			expectedOrder []int
+			expectErr     bool
+			errMsg        string
+		}{
+			{
+				name:          "multiple elements",
+				initialValues: []int{10, 4, 15, 20, 2, 8},
+				expectedOrder: []int{20, 15, 10, 8, 4, 2},
+			},
+			{
+				name:          "single element",
+				initialValues: []int{42},
+				expectedOrder: []int{42},
+			},
+			{
+				name:      "from empty heap",
+				expectErr: true,
+				errMsg:    "heap is empty",
+			},
 		}
 
-		// Check if heap is empty
-		_, err := h.Pop()
-		assert.Error(t, err)
-		assert.Equal(t, "heap is empty", err.Error())
-	})
+		for _, tc := range testCases {
+			t.Run(tc.name, func(t *testing.T) {
+				h := NewMaxHeap()
+				for _, v := range tc.initialValues {
+					h.Push(v)
+				}
 
-	t.Run("Pop from empty heap", func(t *testing.T) {
-		h := NewMaxHeap()
-		_, err := h.Pop()
-		assert.Error(t, err, "should return an error when popping from an empty heap")
+				if tc.expectErr {
+					_, err := h.Pop()
+					assert.Error(t, err)
+					assert.Equal(t, tc.errMsg, err.Error())
+
+					return
+				}
+
+				for _, expected := range tc.expectedOrder {
+					val, err := h.Pop()
+					assert.NoError(t, err)
+					assert.Equal(t, expected, val)
+				}
+
+				// After all expected elements are popped, the heap should be empty.
+				_, err := h.Pop()
+				assert.Error(t, err)
+				assert.Equal(t, "heap is empty", err.Error())
+			})
+		}
 	})
 
 	t.Run("Max", func(t *testing.T) {
-		h := NewMaxHeap()
+		t.Run("on empty heap", func(t *testing.T) {
+			h := NewMaxHeap()
+			_, err := h.Max()
+			assert.Error(t, err)
+			assert.Equal(t, "heap is empty", err.Error())
+		})
 
-		// Test on empty heap
-		_, err := h.Max()
-		assert.Error(t, err)
-		assert.Equal(t, "heap is empty", err.Error())
+		t.Run("on populated heap", func(t *testing.T) {
+			h := NewMaxHeap()
+			h.Push(10)
+			h.Push(4)
+			h.Push(15)
 
-		h.Push(10)
-		h.Push(4)
-		h.Push(15)
+			maxn, err := h.Max()
+			assert.NoError(t, err)
+			assert.Equal(t, 15, maxn)
 
-		max, err := h.Max()
-		assert.NoError(t, err)
-		assert.Equal(t, 15, max)
+			// Ensure Max() doesn't remove the element
+			val, err := h.Pop()
+			assert.NoError(t, err)
+			assert.Equal(t, 15, val)
 
-		// Ensure Max() doesn't remove the element
-		val, err := h.Pop()
-		assert.NoError(t, err)
-		assert.Equal(t, 15, val)
-
-		// Check new max
-		max, err = h.Max()
-		assert.NoError(t, err)
-		assert.Equal(t, 10, max)
+			// Check new max
+			maxn, err = h.Max()
+			assert.NoError(t, err)
+			assert.Equal(t, 10, maxn)
+		})
 	})
 
 	t.Run("IncreaseKey", func(t *testing.T) {
-		h := NewMaxHeap()
-		h.Push(10)
-		h.Push(4)
-		h.Push(15)
-		h.Push(20)
-		h.Push(2)
-		h.Push(8)
-
-		err := h.IncreaseKey(8, 22)
-		assert.NoError(t, err)
-
-		// After increasing 8 to 22, 22 should be the new maximum.
-		val, err := h.Pop()
-		assert.NoError(t, err)
-		assert.Equal(t, 22, val)
-
-		// The rest should follow in order
-		expectedOrder := []int{20, 15, 10, 4, 2}
-		for _, expected := range expectedOrder {
-			val, err := h.Pop()
-			assert.NoError(t, err)
-			assert.Equal(t, expected, val)
+		testCases := []struct {
+			name          string
+			initialValues []int
+			oldVal        int
+			newVal        int
+			expectErr     bool
+			errMsg        string
+			expectedOrder []int
+		}{
+			{
+				name:          "successful increase makes it the new max",
+				initialValues: []int{10, 4, 15, 20, 2, 8},
+				oldVal:        8,
+				newVal:        22,
+				expectErr:     false,
+				expectedOrder: []int{22, 20, 15, 10, 4, 2},
+			},
+			{
+				name:          "value not found",
+				initialValues: []int{10},
+				oldVal:        5,
+				newVal:        12,
+				expectErr:     true,
+				errMsg:        "value not found in heap",
+			},
+			{
+				name:          "new value is smaller",
+				initialValues: []int{10, 5},
+				oldVal:        10,
+				newVal:        2,
+				expectErr:     true,
+				errMsg:        "new value is less than current value",
+			},
 		}
-	})
 
-	t.Run("IncreaseKey value not found", func(t *testing.T) {
-		h := NewMaxHeap()
-		h.Push(10)
-		err := h.IncreaseKey(5, 12)
-		assert.Error(t, err)
-		assert.Equal(t, "value not found in heap", err.Error())
-	})
+		for _, tc := range testCases {
+			t.Run(tc.name, func(t *testing.T) {
+				h := NewMaxHeap()
+				for _, v := range tc.initialValues {
+					h.Push(v)
+				}
 
-	t.Run("IncreaseKey new value is smaller", func(t *testing.T) {
-		h := NewMaxHeap()
-		h.Push(10)
-		h.Push(5)
-		err := h.IncreaseKey(10, 2)
-		assert.Error(t, err)
-		assert.Equal(t, "new value is less than current value", err.Error())
-	})
+				err := h.IncreaseKey(tc.oldVal, tc.newVal)
 
-	t.Run("Heap with one element", func(t *testing.T) {
-		h := NewMaxHeap()
-		h.Push(42)
-		val, err := h.Pop()
-		assert.NoError(t, err)
-		assert.Equal(t, 42, val)
-		_, err = h.Pop()
-		assert.Error(t, err)
+				if tc.expectErr {
+					assert.Error(t, err)
+					assert.Equal(t, tc.errMsg, err.Error())
+				} else {
+					assert.NoError(t, err)
+					// Verify the heap property by popping all elements
+					for _, expected := range tc.expectedOrder {
+						val, popErr := h.Pop()
+						assert.NoError(t, popErr)
+						assert.Equal(t, expected, val)
+					}
+				}
+			})
+		}
 	})
 }

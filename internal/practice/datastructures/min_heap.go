@@ -103,3 +103,11 @@ func (h *MinHeap) DecreaseKey(oldVal, newVal int) error {
 func (h *MinHeap) Print() {
 	fmt.Println("Heap: ", h.data)
 }
+
+func (h *MinHeap) Peek() (int, error) {
+	if len(h.data) == 0 {
+		return 0, errors.New("heap is empty")
+	}
+
+	return h.data[0], nil
+}

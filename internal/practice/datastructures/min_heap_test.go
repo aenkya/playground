@@ -88,4 +88,31 @@ func TestMinHeap(t *testing.T) {
 		_, err = h.Pop()
 		assert.Error(t, err)
 	})
+
+	t.Run("Peek", func(t *testing.T) {
+		h := NewMinHeap()
+
+		// Test on empty heap
+		_, err := h.Peek()
+		assert.Error(t, err)
+		assert.Equal(t, "heap is empty", err.Error())
+
+		h.Push(10)
+		h.Push(4)
+		h.Push(2)
+
+		peekVal, err := h.Peek()
+		assert.NoError(t, err)
+		assert.Equal(t, 2, peekVal)
+
+		// Ensure Peek() doesn't remove the element
+		popVal, err := h.Pop()
+		assert.NoError(t, err)
+		assert.Equal(t, 2, popVal)
+
+		// Check new peek value
+		peekVal, err = h.Peek()
+		assert.NoError(t, err)
+		assert.Equal(t, 4, peekVal)
+	})
 }

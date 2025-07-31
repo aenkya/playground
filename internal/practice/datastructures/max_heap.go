@@ -103,5 +103,6 @@ func (h *MaxHeap) IncreaseKey(oldVal, newVal int) error {
 	delete(h.positionMap, oldVal)
 	h.positionMap[newVal] = index
 	h.heapifyUp(index)
+
 	return nil
 }
