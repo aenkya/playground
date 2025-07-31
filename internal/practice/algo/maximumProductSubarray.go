@@ -3,6 +3,7 @@ package algo
 func maxProduct(nums []int) int {
 	maxProduct := 1
 	n := len(nums)
+
 	for i := 0; i < n; i++ {
 		maxProduct *= nums[i]
 	}
