@@ -19,7 +19,8 @@ func FindLeastNumOfUniqueInts(arr []int, k int) int {
 		if _, exists := freqMap[v]; !exists {
 			freqMap[v] = 0
 		}
-		freqMap[v] += 1
+
+		freqMap[v]++
 	}
 	// 2:4, 4:1, 1:1 3:3
 
@@ -29,7 +30,8 @@ func FindLeastNumOfUniqueInts(arr []int, k int) int {
 	}
 
 	sort.Ints(frequencies) // 1,1,3,4
-	i := k                 // 6
+
+	i := k // 6
 	for i > 0 {
 		i -= frequencies[0]
 		if i >= 0 {

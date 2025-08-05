@@ -59,11 +59,14 @@ attempting using trie:
 
 func ShortestUniquePrefixes(words []string) []string {
 	up := make([]string, len(words))
+
 	for i := 0; i < len(words); i++ {
 		found := false
+
 		for j := 1; j <= len(words[i]); j++ {
 			subseq := words[i][:j]
 			unique := true
+
 			for k := 0; k < len(words); k++ {
 				if i != k && strings.HasPrefix(words[k][:j], subseq) {
 					unique = false
@@ -74,6 +77,7 @@ func ShortestUniquePrefixes(words []string) []string {
 			if unique {
 				up[i] = subseq
 				found = true
+
 				break
 			}
 		}
