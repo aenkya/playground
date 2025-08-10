@@ -152,7 +152,6 @@ func MongoDriverPractice() {
 	}
 }
 
-//nolint:govet // ignore struct field order
 type Movie struct {
 	ID           string    `bson:"_id,omitempty"`
 	Title        string    `bson:"title"`

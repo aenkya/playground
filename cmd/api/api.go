@@ -5,7 +5,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-func main() {
+func API() {
 	cfg := config.NewConfig()
 	envconfig.MustProcess("", cfg)
 }

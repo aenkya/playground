@@ -17,7 +17,7 @@ func HealthCheck(w http.ResponseWriter, _ *http.Request) {
 	_ = json.NewEncoder(w).Encode(map[string]string{"status": "healthy"})
 }
 
-func main() {
+func runAPIServer() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", HealthCheck)
 
@@ -34,4 +34,8 @@ func main() {
 	if err := server.ListenAndServe(); err != nil {
 		fmt.Println("Server failed:", err)
 	}
+}
+
+func main() {
+	runAPIServer()
 }
