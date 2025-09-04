@@ -66,45 +66,55 @@ loop from last to start:
 
 - if non_numeric_encountered is true, return 0
 */
-func main() {
-
-}
-
 func atoi(s string) int {
-	arr := make([]rune, 0, len(s))
-	for _, v := range s {
-		if v == ' ' {
-			continue
-		}
-		arr = append(arr, v)
+	const (
+		maxInt = 1<<31 - 1
+		minInt = -1 << 31
+	)
+
+	bytes := []byte(s)
+	if len(bytes) == 0 {
+		return 0
 	}
 
-	is_negative := false
-	if arr[0] == '-' {
-		is_negative = true
+	isNegative := false
+	start := 0
+
+	for start < len(bytes) && bytes[start] == ' ' {
+		start++
 	}
 
-	sum := 0
-	max := 2*10 ^ 31 - 1
-
-	for _, v := range arr {
-		vint := int(v - '0')
-		if (max / 10) < sum {
-			return max
-		}
-		// 214748364, 7. !is_negative and vint > 7 return max
-		// 214748364, 8		is_negative and vint > 8 return min
-
-		if v < '0' || v > '9' {
-			return sum
+	if start < len(bytes) && (bytes[start] == '-' || bytes[start] == '+') {
+		if bytes[start] == '-' {
+			isNegative = true
 		}
 
-		sum = (sum * 10) + vint
+		start++
 	}
 
-	if is_negative {
-		return -sum
+	digitSum := 0
+
+	for i := start; i < len(bytes); i++ {
+		if bytes[i] < '0' || bytes[i] > '9' {
+			break
+		}
+
+		digit := int(bytes[i] - '0')
+
+		if digitSum > (maxInt-digit)/10 {
+			if isNegative {
+				return minInt
+			}
+
+			return maxInt
+		}
+
+		digitSum = digitSum*10 + digit
 	}
 
-	return sum
+	if isNegative {
+		digitSum = -digitSum
+	}
+
+	return digitSum
 }

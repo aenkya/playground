@@ -1,4 +1,22 @@
-// Max Circular Subarray Sum
-// You are given a circular array arr[] of integers, find the maximum possible sum of a non-empty subarray. In a circular array, the subarray can start at the end and wrap around to the beginning.
-// Return the maximum non-empty subarray sum, considering both non-wrapping and wrapping cases.
 package algo
+
+func maxCircularSubarraySum(nums []int) int {
+	n := len(nums)
+	maxSum, minSum, currentMaxSum, currentMinSum, totalSum := nums[0], nums[0], nums[0], nums[0], nums[0]
+
+	for i := 1; i < n; i++ {
+		currentMaxSum = max(nums[i], nums[i]+currentMaxSum)
+		maxSum = max(maxSum, currentMaxSum)
+
+		currentMinSum = min(nums[i], nums[i]+currentMinSum)
+		minSum = min(minSum, currentMinSum)
+
+		totalSum += nums[i]
+	}
+
+	if maxSum < 0 {
+		return maxSum
+	}
+
+	return max(maxSum, totalSum-minSum)
+}
