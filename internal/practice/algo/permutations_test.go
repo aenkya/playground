@@ -55,11 +55,31 @@ func TestPermute(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		got := permute(tt.input)
-		sort2DSlice(got)
-		sort2DSlice(tt.expected)
-		if !reflect.DeepEqual(got, tt.expected) {
-			t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
-		}
+		t.Run("permute v1 - backtracking:", func(t *testing.T) {
+			got := permute(tt.input)
+			sort2DSlice(got)
+			sort2DSlice(tt.expected)
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
+			}
+		})
+
+		t.Run("permute v2 - backtracking optimised:", func(t *testing.T) {
+			got := permutev2(tt.input)
+			sort2DSlice(got)
+			sort2DSlice(tt.expected)
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
+			}
+		})
+
+		t.Run("permute v2 - iterative:", func(t *testing.T) {
+			got := permutev3(tt.input)
+			sort2DSlice(got)
+			sort2DSlice(tt.expected)
+			if !reflect.DeepEqual(got, tt.expected) {
+				t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
+			}
+		})
 	}
 }
