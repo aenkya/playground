@@ -13,13 +13,16 @@ func sort2DSlice(s [][]int) {
 			if x >= len(s[j]) {
 				return false
 			}
+
 			if s[i][x] < s[j][x] {
 				return true
 			}
+
 			if s[i][x] > s[j][x] {
 				return false
 			}
 		}
+
 		return len(s[i]) < len(s[j])
 	})
 }
@@ -59,6 +62,7 @@ func TestPermute(t *testing.T) {
 			got := permute(tt.input)
 			sort2DSlice(got)
 			sort2DSlice(tt.expected)
+
 			if !reflect.DeepEqual(got, tt.expected) {
 				t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
 			}
@@ -68,6 +72,7 @@ func TestPermute(t *testing.T) {
 			got := permutev2(tt.input)
 			sort2DSlice(got)
 			sort2DSlice(tt.expected)
+
 			if !reflect.DeepEqual(got, tt.expected) {
 				t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
 			}
@@ -77,6 +82,7 @@ func TestPermute(t *testing.T) {
 			got := permutev3(tt.input)
 			sort2DSlice(got)
 			sort2DSlice(tt.expected)
+
 			if !reflect.DeepEqual(got, tt.expected) {
 				t.Errorf("permute(%v) = %v, want %v", tt.input, got, tt.expected)
 			}
