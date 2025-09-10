@@ -115,7 +115,13 @@ func (nq *NQueens) testFunction(f func(n int) [][]string) error {
 
 		for i, r := range result {
 			if !utils.CompareSlice(r, expected[i]) {
-				return fmt.Errorf("in %s for input %v: \nexpected: \n\t%v, \ngot: \n\t%v", functionName, e.Input, expected, result)
+				return fmt.Errorf(
+					"in %s for input %v: \nexpected: \n\t%v, \ngot: \n\t%v",
+					functionName,
+					e.Input,
+					expected,
+					result,
+				)
 			}
 		}
 	}
@@ -139,7 +145,10 @@ func (nq *NQueens) SetTestData(testData []pio.IO) {
 func (nq *NQueens) LoadTestData() {
 	// TODO: Load test data from file
 	nq.testData = []pio.IO{
-		{Input: 4, Output: [][]string{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}}},
+		{
+			Input:  4,
+			Output: [][]string{{".Q..", "...Q", "Q...", "..Q."}, {"..Q.", "Q...", "...Q", ".Q.."}},
+		},
 		{Input: 1, Output: [][]string{{"Q"}}},
 	}
 }

@@ -2,7 +2,7 @@ package config
 
 type Config struct {
 	// The port to listen on
-	Port int `env:"PORT" envDefault:"8080"`
+	Port int `env:"PORT"        envDefault:"8080"`
 	// The environment to run in
 	Environment string `env:"ENVIRONMENT" envDefault:"development"`
 

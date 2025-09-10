@@ -53,7 +53,6 @@ func adventOfCode10(filename string) int {
 
 			clockCycle += 2
 			num, err := strconv.Atoi(lineSegments[1])
-
 			if err != nil {
 				panic("Error converting string to int")
 			}

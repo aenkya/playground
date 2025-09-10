@@ -46,7 +46,9 @@ func TestRemoveDuplicates(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			nums := append([]int{}, tt.input...) // Create a copy to avoid modifying the original input
+			nums := append(
+				[]int{},
+				tt.input...) // Create a copy to avoid modifying the original input
 			length := removeDuplicates(nums)
 
 			if length != tt.length {

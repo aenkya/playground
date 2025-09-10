@@ -86,7 +86,11 @@ func MongoDriverPractice() {
 		fmt.Print(err)
 	}
 
-	fmt.Printf("Matched %v documents and updated %v documents.\n", updateResult.MatchedCount, updateResult.ModifiedCount)
+	fmt.Printf(
+		"Matched %v documents and updated %v documents.\n",
+		updateResult.MatchedCount,
+		updateResult.ModifiedCount,
+	)
 
 	// add insert query
 	newMovie := Movie{
@@ -111,7 +115,7 @@ func MongoDriverPractice() {
 		fmt.Print(err)
 	}
 
-	var mutex = &sync.Mutex{}
+	mutex := &sync.Mutex{}
 	go func() {
 		mutex.Lock()
 		defer mutex.Unlock()

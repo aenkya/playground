@@ -4,9 +4,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/joho/godotenv"
-
 	s "enkya.org/playground/internal/scraper"
+	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
 

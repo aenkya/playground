@@ -69,7 +69,13 @@ func (r *RepeatedWords) testFunction(f func(string) int) error {
 		result := f(s)
 
 		if result != expected {
-			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, result)
+			return fmt.Errorf(
+				"in %s for input %v: \n\texpected %v, got %v",
+				functionName,
+				e.Input,
+				expected,
+				result,
+			)
 		}
 	}
 
@@ -107,8 +113,14 @@ func NewRepeatedWords() *RepeatedWords {
 		description: "Given a string, find the number of repeated words in it.",
 		examples: []io.IO{
 			{Input: "This is a test string. This is a test string.", Output: 5},
-			{Input: "This is a test string. This is a test string. This is a test string.", Output: 10},
-			{Input: "This is a test string. This is a test string. This is a test string. This is a test string.", Output: 14},
+			{
+				Input:  "This is a test string. This is a test string. This is a test string.",
+				Output: 10,
+			},
+			{
+				Input:  "This is a test string. This is a test string. This is a test string. This is a test string.",
+				Output: 14,
+			},
 		},
 		versions: []func(string) int{},
 	}

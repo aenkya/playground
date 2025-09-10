@@ -165,7 +165,13 @@ func (ts *ThreeSum) testFunction(f func(nums []int) [][]int) error {
 
 		for i, r := range result {
 			if !utils.CompareSlice(r, expected[i]) {
-				return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, result)
+				return fmt.Errorf(
+					"in %s for input %v: \n\texpected %v, got %v",
+					functionName,
+					e.Input,
+					expected,
+					result,
+				)
 			}
 		}
 	}

@@ -20,7 +20,12 @@ func (b *Board) MovePlayer(p *Player, pos Position) {
 	// check if the player has landed on a snake
 	if newPos, ok := b.snakePositions[newPos]; ok {
 		p.Move(newPos)
-		fmt.Printf("\n%s with token %s landed on a snake and moved to %d", p.name, p.token, p.position)
+		fmt.Printf(
+			"\n%s with token %s landed on a snake and moved to %d",
+			p.name,
+			p.token,
+			p.position,
+		)
 
 		return
 	}
@@ -28,7 +33,12 @@ func (b *Board) MovePlayer(p *Player, pos Position) {
 	// check if the player has landed on a ladder
 	if newPos, ok := b.ladderPositions[newPos]; ok {
 		p.Move(newPos)
-		fmt.Printf("\n%s with token %s landed on a ladder and moved to %d", p.name, p.token, p.position)
+		fmt.Printf(
+			"\n%s with token %s landed on a ladder and moved to %d",
+			p.name,
+			p.token,
+			p.position,
+		)
 
 		return
 	}

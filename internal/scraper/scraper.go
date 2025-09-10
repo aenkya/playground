@@ -168,7 +168,9 @@ func (s *Scraper) scrapePage(ctx context.Context, url string) PageResult {
 	}
 
 	result.Title = strings.TrimSpace((doc.Find("title")).Text())
-	result.Description = strings.TrimSpace(doc.Find("meta[name='description']").AttrOr("content", ""))
+	result.Description = strings.TrimSpace(
+		doc.Find("meta[name='description']").AttrOr("content", ""),
+	)
 
 	count := 0
 
@@ -254,8 +256,10 @@ func (s *Scraper) shouldCrawl(urlStr string) bool {
 	return true
 }
 
-var robotsCache = make(map[string]*robotstxt.RobotsData)
-var robotsCacheMutex sync.Mutex
+var (
+	robotsCache      = make(map[string]*robotstxt.RobotsData)
+	robotsCacheMutex sync.Mutex
+)
 
 func (s *Scraper) isAllowedByRobots(urlStr string) (bool, error) {
 	parsedURL, err := url.Parse(urlStr)
@@ -265,7 +269,6 @@ func (s *Scraper) isAllowedByRobots(urlStr string) (bool, error) {
 
 	robotsURLStr := parsedURL.Scheme + "://" + parsedURL.Host + "/robots.txt"
 	robotsURL, err := url.Parse(robotsURLStr)
-
 	if err != nil {
 		return false, fmt.Errorf("robots URL %v is not valid", robotsURLStr)
 	}

@@ -153,7 +153,13 @@ func (sm *SpiralMatrix) testFunction(f func(m [][]int) []int) error {
 		r := f(matrix)
 
 		if !utils.CompareSlice(r, expected) {
-			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, r)
+			return fmt.Errorf(
+				"in %s for input %v: \n\texpected %v, got %v",
+				functionName,
+				e.Input,
+				expected,
+				r,
+			)
 		}
 
 		fmt.Printf(".")
@@ -172,7 +178,33 @@ func (sm *SpiralMatrix) LoadTestData() {
 				{16, 17, 18, 19, 20},
 				{21, 22, 23, 24, 25},
 			},
-			Output: []int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
+			Output: []int{
+				1,
+				2,
+				3,
+				4,
+				5,
+				10,
+				15,
+				20,
+				25,
+				24,
+				23,
+				22,
+				21,
+				16,
+				11,
+				6,
+				7,
+				8,
+				9,
+				14,
+				19,
+				18,
+				17,
+				12,
+				13,
+			},
 		},
 	}
 }
@@ -189,7 +221,33 @@ func NewSpiralMatrix() *SpiralMatrix {
 					{16, 17, 18, 19, 20},
 					{21, 22, 23, 24, 25},
 				},
-				Output: []int{1, 2, 3, 4, 5, 10, 15, 20, 25, 24, 23, 22, 21, 16, 11, 6, 7, 8, 9, 14, 19, 18, 17, 12, 13},
+				Output: []int{
+					1,
+					2,
+					3,
+					4,
+					5,
+					10,
+					15,
+					20,
+					25,
+					24,
+					23,
+					22,
+					21,
+					16,
+					11,
+					6,
+					7,
+					8,
+					9,
+					14,
+					19,
+					18,
+					17,
+					12,
+					13,
+				},
 			},
 			{
 				Input:  [][]int{{1, 2}, {3, 4}},

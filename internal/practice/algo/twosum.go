@@ -81,7 +81,13 @@ func (ts *TwoSum) Describe() {
 	for i, e := range ts.examples {
 		nums, _ := e.Input.([]any)[0].([]int)
 		target, _ := e.Input.([]any)[1].(int)
-		fmt.Printf("Example %d:\n\tInput: \tnums = %v, target = %d\n\tOutput:  %v\n", i, nums, target, e.Output)
+		fmt.Printf(
+			"Example %d:\n\tInput: \tnums = %v, target = %d\n\tOutput:  %v\n",
+			i,
+			nums,
+			target,
+			e.Output,
+		)
 	}
 }
 

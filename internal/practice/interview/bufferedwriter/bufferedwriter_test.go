@@ -29,7 +29,11 @@ func TestBufferedWriter_WriteAndFlush(t *testing.T) {
 	// Check if the buffer is flushed correctly
 	expectedFirstFlush := "hello"
 	if mock.writtenData.String()[:len(expectedFirstFlush)] != expectedFirstFlush {
-		t.Errorf("expected first flush to write '%s', got '%s'", expectedFirstFlush, mock.writtenData.String()[:len(expectedFirstFlush)])
+		t.Errorf(
+			"expected first flush to write '%s', got '%s'",
+			expectedFirstFlush,
+			mock.writtenData.String()[:len(expectedFirstFlush)],
+		)
 	}
 
 	// Check if remaining data is in the buffer
@@ -38,7 +42,11 @@ func TestBufferedWriter_WriteAndFlush(t *testing.T) {
 	bw.Flush()
 
 	if mock.writtenData.String()[len(expectedFirstFlush):] != expectedRemaining {
-		t.Errorf("expected second flush to write '%s', got '%s'", expectedRemaining, mock.writtenData.String()[len(expectedFirstFlush):])
+		t.Errorf(
+			"expected second flush to write '%s', got '%s'",
+			expectedRemaining,
+			mock.writtenData.String()[len(expectedFirstFlush):],
+		)
 	}
 }
 

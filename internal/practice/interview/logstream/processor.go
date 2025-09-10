@@ -4,8 +4,7 @@ type Processor interface {
 	Process([]string) []string
 }
 
-type InputProcessor struct {
-}
+type InputProcessor struct{}
 
 func (p *InputProcessor) ReceiveInputFromArray(instr []string) {
 	for _, input := range instr {

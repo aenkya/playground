@@ -92,7 +92,13 @@ func (vp *IsValidPalindrome) testFunction(f func(s string) bool) error {
 		result := f(nums)
 
 		if result != expected {
-			return fmt.Errorf("in %s for input %v: \n\texpected %v, got %v", functionName, e.Input, expected, result)
+			return fmt.Errorf(
+				"in %s for input %v: \n\texpected %v, got %v",
+				functionName,
+				e.Input,
+				expected,
+				result,
+			)
 		}
 	}
 
